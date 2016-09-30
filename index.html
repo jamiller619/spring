@@ -52,8 +52,16 @@
     border-spacing: 0;
   }
 
-  #timepiece ul {
-    position: relative;
+  body {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+  }
+  #timepiece {
+    position: fixed;
+    right: 240px;
+    bottom: 240px;
+    transform: scale(.5);
   }
   #timepiece li {
     position: absolute;
@@ -95,6 +103,20 @@
   <script>
     var Spring = Spring || {};
 
+    Spring.Unsplash = (function(window, document) {
+
+      var unsplashUrl = "https://source.unsplash.com/featured/";
+
+      function init() {
+        var url = unsplashUrl + window.innerWidth + 'x' + window.innerHeight;
+        document.body.style.backgroundImage = 'url(' + url + ')';
+      }
+
+      return {
+        init: init
+      }
+    })(window, document);
+
     Spring.TimePiece = (function() {
 
       var secondsInHour = 60 * 60,
@@ -135,6 +157,7 @@
       }
     })();
 
+    Spring.Unsplash.init();
     Spring.TimePiece.init();
 
   </script>
