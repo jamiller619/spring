@@ -3,29 +3,140 @@
 <head>
   <title>Spring</title>
   <style type="text/css">
+  /* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+  */
+
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed, 
+  figure, figcaption, footer, header, hgroup, 
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+  }
+  /* HTML5 display-role reset for older browsers */
+  article, aside, details, figcaption, figure, 
+  footer, header, hgroup, menu, nav, section {
+    display: block;
+  }
+  body {
+    line-height: 1;
+  }
+  ol, ul {
+    list-style: none;
+  }
+  blockquote, q {
+    quotes: none;
+  }
+  blockquote:before, blockquote:after,
+  q:before, q:after {
+    content: '';
+    content: none;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
   #timepiece ul {
     position: relative;
   }
   #timepiece li {
     position: absolute;
-    top: 0;
-    left: 0;
+  }
+  #minute,
+  #hour,
+  #timepiece .indicators {
     width: 500px;
     height: 500px;
+    top: 0;
+    left: 0;
   }
-  .minute {
-    background-image: url(images/minute.png);
+  #minute {
+    background-image: url(assets/images/minute.png);
   }
-  .hour {
-    background-image: url(images/hour.png);
+  #hour {
+    background-image: url(assets/images/hour.png);
+  }
+  #timepiece .indicators {
+    background-image: url(assets/images/indicators.png);
+  }
+  #timepiece .center {
+    width: 200px;
+    height: 200px;
+    background-color: black;
+    border-radius: 100px;
+    top: 150px;
+    left: 150px;
   }
   </style>
 </head>
 <body>
   <ul id="timepiece">
+    <li id="hour"></li>
+    <li id="minute"></li>
     <li class="center"></li>
-    <li class="minute"></li>
-    <li class="hour"></li>
+    <li class="indicators"></li>
   </ul>
+  <script>
+    var Spring = Spring || {};
+
+    Spring.TimePiece = (function() {
+
+      var secondsInHour = 60 * 60,
+          secondsInDay = secondsInHour * 12;
+
+      var els = {
+        minute: document.getElementById('minute'),
+        hour: document.getElementById('hour')
+      };
+
+      function setRotation(el, deg) {
+        el.style.transform = 'rotate(' + deg + 'deg)';
+      }
+
+      function drawClock() {
+        var now = new Date(),
+            _hours = now.getHours(),
+            seconds = now.getSeconds(),
+            minutes = now.getMinutes(),
+            hours = _hours > 12 ? _hours - 12 : _hours,
+            secondsInHour = 60 * 60,
+            secondsInDay = secondsInHour * 12,
+            minutesInSeconds = (minutes + (seconds/60)) * 60,
+            hoursInSeconds = (hours + (minutes/60)) * secondsInHour;
+
+        setRotation(els.minute, (minutesInSeconds / secondsInHour) * 360);
+        setRotation(els.hour, (hoursInSeconds / secondsInDay) * 360);
+
+        requestAnimationFrame(drawClock);
+      }
+
+      function init() {
+        requestAnimationFrame(drawClock);
+      }
+
+      return {
+        init: init
+      }
+    })();
+
+    Spring.TimePiece.init();
+
+  </script>
 </body>
 </html>
