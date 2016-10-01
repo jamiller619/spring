@@ -1,10 +1,13 @@
 {
   "name": "Spring",
-  "description": "Elegant new tab page for Chrome",
+  "description": "Elegant new tab page for Google Chrome",
   "version": "0.1",
   "incognito": "split",
   "chrome_url_overrides": {
     "newtab": "index.html"
+  },
+  "browser_action": {
+    "default_icon": "assets/images/icon.png"
   },
   "manifest_version": 2
 }
