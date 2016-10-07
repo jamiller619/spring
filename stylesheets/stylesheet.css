@@ -7,7 +7,12 @@ body {
   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  color: #606c71; }
+  color: #606c71;
+  background-image: url(../images/bg.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+}
 
 a {
   color: #1e6bb8;
@@ -54,10 +59,9 @@ a {
       margin-left: 0; } }
 
 .page-header {
-  color: #fff;
+  color: #082631;
   text-align: center;
-  background-color: #159957;
-  background-image: linear-gradient(120deg, #155799, #159957); }
+}
 
 @media screen and (min-width: 64em) {
   .page-header {
