@@ -51,10 +51,12 @@
     border-spacing: 0;
   }
 
+  /* Spring */
   body {
     background-repeat: no-repeat;
     background-position: center center;
     background-attachment: fixed;
+    background-color: #8aa7d2;
   }
   #timepiece {
     position: fixed;
@@ -62,9 +64,6 @@
     right: 10px;
     width: 210px;
     height: 210px;
-    /*background: rgba(3,29,3,.7);*/
-    background: rgba(20, 121, 20, 0.7);
-    border-radius: 105px;
   }
   #timepiece li {
     position: absolute;
@@ -75,31 +74,72 @@
     top: 0;
     left: 0;
   }
-  #minute {
+  #timepiece .minutes {
     background-image: url(assets/images/minute.png);
   }
-  #hour {
+  #timepiece .hour {
     background-image: url(assets/images/hour.png);
+    mix-blend-mode: screen;
   }
   .indicators {
     background-image: url(assets/images/indicators.png);
   }
-  .center {
-    width: 100px;
-    height: 100px;
-    background-color: #0c2705;
-    /*background-color: #031d03;*/
-    border-radius: 50px;
-    top: 55px;
-    left: 55px;
+  #digital {
+    position: fixed;
+    right: 220px;
+    bottom: 10px;
+    font-weight: lighter;
+    font-family: Helvetica, Arial, sans-serif;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(11,150,173,.7);
+    mix-blend-mode: luminosity;
+  }
+  #digital .date {
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: right;
+  }
+  #digital .time {
+    font-size: 75px;
+  }
+  #digital .time span {
+    display: block;
+    float: left;
+  }
+  #digital .time .am-pm {
+    margin-left: 10px;
+  }
+  #digital .time .colon {
+    margin-right: 1px;
+    position: relative;
+    bottom: 4px;
+  }
+  #digital .time .minutes .one:first-child {
+    margin-left: -8px;
+  }
+  #digital .time .hour .one:last-child {
+    margin-right: -2px;
+  }
+
+  #digital .time .one {
+    letter-spacing: -6px;
+    margin-left: -6px;
   }
   </style>
 </head>
 <body>
+  <div id="digital">
+    <p class="time">
+      <span class="hour"></span>
+      <span class="colon">:</span>
+      <span class="minutes"></span>
+      <span class="am-pm"></span>
+    </p>
+    <p class="date"></p>
+  </div>
   <ul id="timepiece" role="presentation" aria-hidden="true">
-    <li id="hour"></li>
-    <li id="minute"></li>
-    <li class="center"></li>
+    <li class="minutes"></li>
+    <li class="hour"></li>
     <li class="indicators"></li>
   </ul>
   <script src="assets/scripts/spring.js"></script>
