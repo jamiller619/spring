@@ -26,7 +26,7 @@
   var Spring = Spring || {};
 
   Spring.Unsplash = {
-    url: 'https://source.unsplash.com/{0}',
+    url: 'https://source.unsplash.com/featured/{0}/daily',
     init: function() {
       var bgUrl = this.url.format(window.innerWidth + 'x' + window.innerHeight);
 
