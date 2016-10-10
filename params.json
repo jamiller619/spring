@@ -1,6 +1,4 @@
 {
   "name": "Spring",
-  "tagline": "An elegant new tab page for Google Chrome",
-  "body": "# Spring\r\nAn elegant new tab page for Google Chrome\r\n\r\nTired with most of the current New Tab page offerings in the Chrome Extension gallery I decided to create my own.\r\n\r\nThere are only two features of Spring:\r\n- Full size background images from Unsplash tailored to the resolution of your monitor\r\n- Analog clock inspired by the beautiful timepiece designs of Ziiiro \r\n",
-  "note": "Don't delete this file! It's used internally to help with page regeneration."
+  "tagline": "An elegant new tab page for Google Chrome"
 }
