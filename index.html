@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>New Tab</title>
+  <meta charset="UTF-8">
   <style type="text/css">
   /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -64,29 +65,51 @@
     right: 10px;
     width: 210px;
     height: 210px;
+    background: rgba(255,255,255,.5);
+    border-radius: 50%;
+    /*border: 4px solid #191d1f;*/
   }
   #timepiece li {
     position: absolute;
   }
-  #timepiece li:not(.center) {
+  #timepiece .minutes,
+  #timepiece .hour {
+    mix-blend-mode: multiply;
+  }
+  #timepiece .minutes,
+  #timepiece .hour,
+  #timepiece .center {
+    border-radius: 50%;
+  }
+  #timepiece .minutes,
+  #timepiece .hour,
+  #timepiece .indicators {
     width: 210px;
     height: 210px;
     top: 0;
     left: 0;
   }
-  #timepiece .minutes {
-    background-image: url(assets/images/minute.png);
+  #timepiece .center {
+    width: 50%;
+    height: 50%;
+    background-color: #191d1f;
+    margin-left: 25%;
+    margin-top: 25%;
+    box-shadow: 2px 2px 8px rgba(0,0,0,.8);
   }
-  #timepiece .hour {
-    background-image: url(assets/images/hour.png);
-    mix-blend-mode: screen;
+  #timepiece .minute-hand {
+    width: 4px;
+    height: 50%;
+    left: calc(50% - 2px);
+    background-color: rgb(0,215,255);
+    transform-origin: bottom;
   }
-  .indicators {
+  #timepiece .indicators {
     background-image: url(assets/images/indicators.png);
   }
   #digital {
     position: fixed;
-    right: 220px;
+    right: 230px;
     bottom: 10px;
     font-weight: lighter;
     font-family: Helvetica, Arial, sans-serif;
@@ -138,10 +161,13 @@
     <p class="date"></p>
   </div>
   <ul id="timepiece" role="presentation" aria-hidden="true">
-    <li class="minutes"></li>
-    <li class="hour"></li>
     <li class="indicators"></li>
+    <li class="minutes"></li>
+    <li class="minute-hand"></li>
+    <li class="hour"></li>
+    <li class="center"></li>
   </ul>
+  <script src="assets/scripts/conic-gradient.js"></script>
   <script src="assets/scripts/spring.js"></script>
 </body>
 </html>

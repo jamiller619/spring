@@ -47,6 +47,7 @@
 
     var els = {
       minute: timePiece.querySelector('.minutes'),
+      minuteHand: timePiece.querySelector('.minute-hand'),
       hour: timePiece.querySelector('.hour'),
       digitalHours: digital.querySelector('.hour'),
       digitalMinutes: digital.querySelector('.minutes'),
@@ -84,7 +85,10 @@
           displayHours = (hours % 12 == 0 ? 12 : hours % 12).toString(),
           displayMinutes = minutes >= 10 ? minutes.toString() : '0' + minutes;
 
-      setRotation(els.minute, (minutesInSeconds / secondsInHour) * 360);
+      var minuteDegrees = (minutesInSeconds / secondsInHour) * 360;
+
+      setRotation(els.minute, minuteDegrees);
+      setRotation(els.minuteHand, minuteDegrees);
       setRotation(els.hour, (hoursInSeconds / secondsInDay) * 360);
 
       if(minutes != currentMinutes) {
@@ -120,8 +124,24 @@
       requestAnimationFrame(init);
     }
 
+    function initGradients() {
+      var minuteGradient = new ConicGradient({
+        stops: 'rgba(0,215,255,1), rgba(0,215,255,.1)',
+        size: 210
+      });
+
+      var hourGradient = new ConicGradient({
+        stops: 'rgba(255,215,0,1), rgba(255,215,0,.1)',
+        size: 210
+      })
+
+      els.minute.style.backgroundImage = 'url({0})'.format(minuteGradient.png);
+      els.hour.style.backgroundImage = 'url({0})'.format(hourGradient.png);
+    }
+
     return {
       init: init,
+      initGradients: initGradients,
       drawCustomTime: function(hours, minutes) {
         drawTime(hours, minutes, 0);
 
@@ -134,7 +154,9 @@
   Spring.init = function() {
     var param = getParameterByName('t');
 
-    this.Unsplash.init();
+    //this.Unsplash.init();
+    document.body.style.backgroundImage = 'url(https://hd.unsplash.com/photo-1432256851563-20155d0b7a39)';
+    this.TimePiece.initGradients();
 
     if(param) {
       var time = param.split(':');
