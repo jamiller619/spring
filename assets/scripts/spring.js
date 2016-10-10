@@ -154,8 +154,7 @@
   Spring.init = function() {
     var param = getParameterByName('t');
 
-    //this.Unsplash.init();
-    document.body.style.backgroundImage = 'url(https://hd.unsplash.com/photo-1432256851563-20155d0b7a39)';
+    this.Unsplash.init();
     this.TimePiece.initGradients();
 
     if(param) {
