@@ -13,6 +13,16 @@ body {
   background-position: center center;
   background-size: cover;
 }
+a.btn {
+  text-decoration: none;
+  border: 2px solid #1e281e;
+  border-radius: 4px;
+  padding: 8px 58px;
+  font-size: 22px;
+  color: #1e281e;
+  display: inline-block;
+  margin: 10px 0;
+}
 h2 {
   font-weight: 300;
   letter-spacing: .5px;
@@ -25,6 +35,6 @@ h2 {
 }
 .screenshot {
   display: block;
-  margin: 5vh auto;
-  max-width: 50%;
+  margin: 20px auto 0;
+  max-height: calc(100vh - 370px);
 }
