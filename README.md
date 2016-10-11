@@ -1,5 +1,5 @@
 # Spring
-An elegant new tab page for Google Chrome
+A simple, new tab page for Google Chrome
 
 Featuring:
 - Full size background image from [Unsplash](http://www.unsplash.com), updated daily and tailored to the resolution of your monitor
