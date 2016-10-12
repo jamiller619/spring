@@ -28,7 +28,7 @@
   Spring.Unsplash = {
     url: 'https://source.unsplash.com/featured/{0}/{1}',
     init: function() {
-      var bgUrl = this.url.format(window.innerWidth + 'x' + window.innerHeight, getParameterByName('debug') ? '' : 'featured');
+      var bgUrl = this.url.format(window.innerWidth + 'x' + window.innerHeight, getParameterByName('debug') ? '' : 'daily');
 
       document.body.style.backgroundImage = 'url({0})'.format(bgUrl);
     }
