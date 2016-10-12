@@ -76,6 +76,11 @@
   #watch .hour {
     mix-blend-mode: multiply;
   }
+  #watch .minutes[data-init="false"],
+  #watch .hour[data-init="false"],
+  #watch .minute-hand[data-init="false"] {
+    transition: transform 900ms;
+  }
   #watch .minutes,
   #watch .hour,
   #watch .center {

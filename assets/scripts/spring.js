@@ -87,9 +87,17 @@
 
       var minuteDegrees = (minutesInSeconds / secondsInHour) * 360;
 
-      setRotation(els.minute, minuteDegrees);
-      setRotation(els.minuteHand, minuteDegrees);
-      setRotation(els.hour, (hoursInSeconds / secondsInDay) * 360);
+      checkElementInit(els.minute, function() {
+        setRotation(this, minuteDegrees);
+      });
+      
+      checkElementInit(els.minuteHand, function() {
+        setRotation(this, minuteDegrees);
+      });
+
+      checkElementInit(els.hour, function() {
+        setRotation(this, (hoursInSeconds / secondsInDay) * 360);
+      });
 
       if(minutes != currentMinutes) {
         emptyNode(els.digitalHours).appendChild(drawText(displayHours));
@@ -107,6 +115,22 @@
           displayDate = '{0}, {1} {2}'.format(days[day], months[month], date);
           
       els.digitalDate.textContent = displayDate;
+    }
+
+    function checkElementInit(el, callback) {
+      var callCallback = function() {
+        if(callback && typeof(callback) == 'function') callback.call(el);
+      }
+      callCallback();
+      if(!el.hasAttribute('data-init')) {
+        el.setAttribute('data-init', false);
+        callCallback();
+        setTimeout(function() {
+          el.setAttribute('data-init', true);
+        }, 1000);
+      } else {
+        callCallback();
+      }
     }
 
     function init() {
@@ -133,7 +157,7 @@
       var hourGradient = new ConicGradient({
         stops: 'rgba(255,215,0,1), rgba(255,215,0,.1)',
         size: 210
-      })
+      });
 
       els.minute.style.backgroundImage = 'url({0})'.format(minuteGradient.png);
       els.hour.style.backgroundImage = 'url({0})'.format(hourGradient.png);
