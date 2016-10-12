@@ -45,5 +45,3 @@ h2 {
   max-height: calc(100vh - 370px);
   max-width: 95%;
 }
-@media(min-width: 729px) {
-}
