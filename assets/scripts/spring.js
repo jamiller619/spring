@@ -26,15 +26,15 @@
   var Spring = Spring || {};
 
   Spring.Unsplash = {
-    url: 'https://source.unsplash.com/featured/{0}/daily',
+    url: 'https://source.unsplash.com/featured/{0}/{1}',
     init: function() {
-      var bgUrl = this.url.format(window.innerWidth + 'x' + window.innerHeight);
+      var bgUrl = this.url.format(window.innerWidth + 'x' + window.innerHeight, getParameterByName('debug') ? '' : 'featured');
 
       document.body.style.backgroundImage = 'url({0})'.format(bgUrl);
     }
   };
 
-  Spring.TimePiece = (function() {
+  Spring.Watch = (function() {
 
     var currentMinutes;
     
@@ -42,13 +42,13 @@
         secondsInDay = secondsInHour * 12,
         timeClasses = ['zero','one','two','three','four','five','six','seven','eight','nine'];
 
-    var timePiece = document.getElementById('timepiece'),
+    var watch = document.getElementById('watch'),
         digital = document.getElementById('digital');
 
     var els = {
-      minute: timePiece.querySelector('.minutes'),
-      minuteHand: timePiece.querySelector('.minute-hand'),
-      hour: timePiece.querySelector('.hour'),
+      minute: watch.querySelector('.minutes'),
+      minuteHand: watch.querySelector('.minute-hand'),
+      hour: watch.querySelector('.hour'),
       digitalHours: digital.querySelector('.hour'),
       digitalMinutes: digital.querySelector('.minutes'),
       digitalAmPm: digital.querySelector('.am-pm'),
@@ -155,13 +155,13 @@
     var param = getParameterByName('t');
 
     this.Unsplash.init();
-    this.TimePiece.initGradients();
+    this.Watch.initGradients();
 
     if(param) {
       var time = param.split(':');
-      this.TimePiece.drawCustomTime(~~time[0], ~~time[1]);
+      this.Watch.drawCustomTime(~~time[0], ~~time[1]);
     } else {
-      this.TimePiece.init();
+      this.Watch.init();
     }
   };
 
