@@ -1,0 +1,136 @@
+@import "reset";
+
+body {
+  background-color: #8aa7d2;
+}
+
+#fs-background {
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  transition: all .2s ease;
+  opacity: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+#watch {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: 210px;
+  height: 210px;
+  background: rgba(255,255,255,.5);
+  border-radius: 50%;
+  z-index: 2;
+  
+  li {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210px;
+    height: 210px;
+  }
+
+  .multiply {
+    mix-blend-mode: multiply;
+  }
+
+  .rotate[data-init="false"] {
+    transition: transform 1.2s;
+  }
+
+  .circle {
+    border-radius: 50%;
+  }
+
+  .minutes,
+  .hour {
+    @extend .multiply;
+    @extend .rotate;
+    @extend .circle;
+  }
+
+  .minutes {
+    transform: rotate(0deg);
+  }
+
+  .hour {
+    transform: rotate(6deg);
+  }
+
+  .center {
+    @extend .circle;
+    width: 50%;
+    height: 50%;
+    background-color: #191d1f;
+    margin-left: 25%;
+    margin-top: 25%;
+    box-shadow: 2px 2px 8px rgba(0,0,0,.8);
+  }
+
+  .minute-hand {
+    @extend .rotate;
+    width: 4px;
+    height: 50%;
+    left: calc(50% - 2px);
+    background-color: rgb(0,215,255);
+    transform-origin: bottom;
+  }
+
+  .indicators {
+    background-image: url(../images/indicators.png);
+  }
+}
+
+#digital {
+  position: fixed;
+  right: 230px;
+  bottom: 10px;
+  font-weight: lighter;
+  font-family: Helvetica, Arial, sans-serif;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(11,150,173,.7);
+  mix-blend-mode: luminosity;
+  z-index: 2;
+  transition: all .5s;
+  opacity: 0;
+
+  .date {
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: right;
+  }
+
+  .time {
+    font-size: 75px;
+
+    span {
+      display: block;
+      float: left;
+    }
+
+    .am-pm {
+      margin-left: 10px;
+    }
+
+    .colon {
+      margin-right: 1px;
+      position: relative;
+      bottom: 4px;
+    }
+
+    .minutes .one:first-child {
+      margin-left: -8px;
+    }
+
+    .hour .one:last-child {
+      margin-right: -2px;
+    }
+
+    .one {
+      letter-spacing: -6px;
+      margin-left: -6px;
+    }
+  }
+}
