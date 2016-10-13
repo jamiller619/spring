@@ -2,6 +2,7 @@
 
 body {
   background-color: #8aa7d2;
+  overflow: hidden;
 }
 
 #fs-background {
@@ -37,7 +38,7 @@ body {
   }
 
   .rotate[data-init="false"] {
-    transition: transform 1.2s;
+    transition: transform 1.2s ease;
   }
 
   .circle {
