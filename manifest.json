@@ -2,13 +2,10 @@
   "manifest_version": 2,
   "name": "Spring",
   "description": "A simple, new tab page for Google Chrome.",
-  "version": "0.4",
+  "version": "0.5",
   "incognito": "split",
   "chrome_url_overrides": {
     "newtab": "index.html"
-  },
-  "browser_action": {
-    "default_icon": "assets/images/icon.png"
   },
   "icons": {
     "128": "assets/images/icon_128.png"
