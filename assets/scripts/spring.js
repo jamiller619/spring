@@ -94,7 +94,8 @@
           displayHours = (hours % 12 == 0 ? 12 : hours % 12).toString(),
           displayMinutes = minutes >= 10 ? minutes.toString() : '0' + minutes;
 
-      var minuteDegrees = (minutesInSeconds / secondsInHour) * 360;
+      var minuteDegrees = ((minutesInSeconds / secondsInHour) * 360) % 360;
+      var hourDegress = ((hoursInSeconds / secondsInDay) * 360) % 360;
 
       checkElementInit(els.minute, function() {
         setRotation(this, minuteDegrees);
@@ -105,7 +106,7 @@
       });
 
       checkElementInit(els.hour, function() {
-        setRotation(this, (hoursInSeconds / secondsInDay) * 360);
+        setRotation(this, hourDegress);
       });
 
       if(minutes != currentMinutes) {

@@ -24,6 +24,7 @@ body {
   background: rgba(255,255,255,.5);
   border-radius: 50%;
   z-index: 2;
+  transform: perspective(600px);
   
   li {
     position: absolute;
@@ -38,6 +39,7 @@ body {
   }
 
   .rotate[data-init="false"] {
+    transform: perspective(600px);
     transition: transform 1.2s ease;
   }
 
