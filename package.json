@@ -1,0 +1,22 @@
+{
+  "name": "spring",
+  "version": "1.0.0",
+  "description": "A simple, new tab page for Google Chrome",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamiller619/spring.git"
+  },
+  "author": "Jeff Miller",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jamiller619/spring/issues"
+  },
+  "homepage": "https://jamiller619.github.io/spring",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
