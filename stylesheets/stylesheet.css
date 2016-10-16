@@ -24,10 +24,11 @@ a.btn {
   max-width: 90%;
   padding: 8px 20px;
   margin: 10px 0;
-  border: 2px solid #1e281e;
+  border: 4px solid #1e281e;
   border-radius: 4px;
   font-size: 22px;
   color: #1e281e;
+  background: rgba(255,255,255,.4);
 }
 h2 {
   font-weight: 300;
