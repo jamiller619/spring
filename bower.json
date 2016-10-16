@@ -1,0 +1,21 @@
+{
+  "name": "spring",
+  "description": "A simple, new tab page for Google Chrome",
+  "main": "index.js",
+  "authors": [
+    "Jeff Miller"
+  ],
+  "license": "MIT",
+  "homepage": "https://jamiller619.github.io/spring",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "reset-scss": "^2.0.2",
+    "conic-gradient": "https://raw.githubusercontent.com/LeaVerou/conic-gradient/gh-pages/conic-gradient.js"
+  }
+}
