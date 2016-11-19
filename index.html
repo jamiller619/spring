@@ -17,17 +17,108 @@
     </p>
     <p class="date"></p>
   </div>
-  <ul id="watch" role="presentation" aria-hidden="true">
+  <svg id="watch">
+    <g>
+      <defs>
+        <clipPath id="overlay-clip">
+          <rect />
+        </clipPath>
+        <mask id="mask-hour">
+          <g>
+            <rect class="angle-rect" />
+            <g class="mask-a"></g>
+            <g class="mask-b" clip-path="url(#overlay-clip)"></g>
+          </g>
+        </mask>
+        <mask id="mask-minute">
+          <g>
+            <rect class="angle-rect" />
+            <g class="mask-a"></g>
+            <g class="mask-b" clip-path="url(#overlay-clip)"></g>
+          </g>
+        </mask>
+      </defs>
+      <!--<circle id="shadow" style="fill:rgba(0,0,0,0.1)" cx="97" cy="100" r="87" filter="url(#innerShadow)"></circle>-->
+      <circle id="hour">
+        <animatetransform attributeName="transform"
+                          type="rotate"
+                          dur="43200s"
+                          repeatCount="indefinite"/>
+      </circle>
+      <circle id="minute">
+        <animatetransform attributeName="transform"
+                          type="rotate"
+                          dur="3600s"
+                          repeatCount="indefinite"/>
+      </circle>
+      <circle id="center"></circle>
+    </g>
+  </svg>
+  <!--<ul id="watch" role="presentation" aria-hidden="true">
     <li class="indicators"></li>
     <li class="minutes"></li>
     <li class="hour"></li>
     <li class="minute-hand"></li>
     <li class="center"></li>
-  </ul>
+  </ul>-->
   <img id="fs-background" alt="Unsplash background image" />
   <!-- build:js js/spring.min.js -->
   <script src="bower_components/conic-gradient/index.js"></script>
   <script src="assets/js/spring.js"></script>
   <!-- endbuild -->
+  <script>
+  var date = new Date();
+  var hoursAngle = 90 + 360 * date.getHours() / 12 + date.getMinutes() / 2;
+  var minuteAngle = 90 + 360 * date.getMinutes() / 60;
+  var cx = 150;
+    var cy = 150;
+
+    var joiner = function(val) {
+      return [val, cx, cy].join(' ');
+    }
+
+    function makeRGBA(degree){
+
+      var ratio = 1 - Math.abs((degree / 360));
+      var colorVal = Math.floor(255 * ratio);
+      var colorArray = [colorVal,colorVal,colorVal]
+      return 'rgba('+colorArray.join(',')+',1)';
+
+
+    }
+
+    function drawConical(container) {
+      var maskA = container.querySelector('.mask-a'),
+        maskB = container.querySelector('.mask-b');
+
+      for(i = 1 ; i < 360 ; i++){
+
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('width', '10vw');
+        rect.setAttribute('height', '10vw');
+        rect.setAttribute('fill', makeRGBA(i));
+        rect.setAttribute('transform', 'rotate(' + joiner(i) + ')');
+        
+        if(i > 180){
+          maskB.appendChild(rect);
+        }else{
+          maskA.appendChild(rect);
+        }
+
+      }
+    }
+
+    drawConical(document.getElementById('mask-hour'));
+    drawConical(document.getElementById('mask-minute'));
+
+    var hour = document.getElementById('hour').querySelector('animateTransform');
+    var minute = document.getElementById('minute').querySelector('animateTransform');
+
+    hour.setAttribute('from', joiner(hoursAngle));
+    hour.setAttribute('to', joiner(hoursAngle + 360));
+
+    minute.setAttribute('from', joiner(minuteAngle));
+    minute.setAttribute('to', joiner(minuteAngle + 360));
+  </script>
 </body>
 </html>

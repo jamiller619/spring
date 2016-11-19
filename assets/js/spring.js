@@ -189,13 +189,13 @@
     var param = getParameterByName('t');
 
     this.Unsplash.init();
-    this.Watch.initGradients();
+    //this.Watch.initGradients();
 
     if(param) {
       var time = param.split(':');
-      this.Watch.drawCustomTime(~~time[0], ~~time[1]);
+      //this.Watch.drawCustomTime(~~time[0], ~~time[1]);
     } else {
-      this.Watch.init();
+      //this.Watch.init();
     }
   };
 

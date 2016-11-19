@@ -15,7 +15,56 @@ body {
   height: 100vh;
 }
 
+$watch-size: 300px;
+$colorHour: #e9447e;
+$colorMinute: #b9afde;
+
 #watch {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: $watch-size;
+  height: $watch-size;
+
+  #center {
+    fill: #111111;
+    r: $watch-size/4;
+    cx: $watch-size/2;
+    cy: $watch-size/2;
+  }
+
+  #overlay-clip rect {
+    x: 0;
+    y: $watch-size/2;
+    width: $watch-size;
+    height: $watch-size/2;
+  }
+
+  .angle-rect {
+    width: $watch-size;
+    height: $watch-size;
+    fill: white;
+  }
+
+  #hour,
+  #minute {
+    cx: $watch-size/2;
+    cy: $watch-size/2;
+    r: $watch-size/2;
+  }
+
+  #hour {
+    mask: url(#mask-hour);
+    fill: $colorHour;
+  }
+
+  #minute {
+    mask: url(#mask-minute);
+    fill: $colorMinute;
+  }
+}
+
+#watch-bak {
   position: fixed;
   bottom: 10px;
   right: 10px;
@@ -88,7 +137,7 @@ body {
 
 #digital {
   position: fixed;
-  right: 230px;
+  //right: 230px;
   bottom: 10px;
   font-weight: lighter;
   font-family: Helvetica, Arial, sans-serif;
