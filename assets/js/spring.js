@@ -23,23 +23,100 @@
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  var Spring = Spring || {};
+  var Spring = window.Spring = Spring || {};
 
-  Spring.Unsplash = {
-    url: 'https://source.unsplash.com/featured/{0}/{1}',
-    init: function() {
-      var bgImg = document.getElementById('fs-background');
-      var bgUrl = this.url.format(window.innerWidth + 'x' + window.innerHeight, getParameterByName('debug') ? '' : 'daily');
+  Spring.Unsplash = (function() {
+    var url = 'https://source.unsplash.com/featured/{0}/{1}';
+
+    return function() {
+      var bgImg = document.getElementById('fs-bg');
+      var bgUrl = url.format(window.innerWidth + 'x' + window.innerHeight, getParameterByName('debug') ? '' : 'daily');
+
+      bgImg.setAttribute('src', bgUrl);
 
       bgImg.addEventListener('load', function() {
         bgImg.style.opacity = '1';
       });
-
-      bgImg.setAttribute('src', bgUrl);
     }
-  };
+  })();
 
   Spring.Watch = (function() {
+    
+    var rad = 150;
+    var els = {
+      hour: document.getElementById('hour'),
+      minute: document.getElementById('minute'),
+      minuteHand: document.getElementById('minute-hand'),
+      hourMask: document.getElementById('hour-mask'),
+      minuteMask: document.getElementById('minute-mask')
+    };
+
+    els.minuteHand.setAttribute('x2', rad);
+    els.minuteHand.setAttribute('y1', rad);
+    els.minuteHand.setAttribute('y2', rad);
+
+    function radClip(val) {
+      return [val, rad, rad].join(' ');
+    }
+
+    function makeRGBA(degree) {
+      var ratio = 1 - Math.abs((degree / 360));
+      var colorVal = Math.floor(255 * ratio);
+      var colorArray = [colorVal, colorVal, colorVal];
+      return 'rgba({0},1)'.format(colorArray.join(','));
+    }
+
+    function drawConical(container) {
+      var maskA = container.querySelector('.mask-a');
+      var maskB = container.querySelector('.mask-b');
+      var i = 1;
+
+      for(i; i < 360; i += 5) {
+        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('width', rad);
+        rect.setAttribute('height', rad);
+        rect.setAttribute('fill', makeRGBA(i));
+        rect.setAttribute('transform', 'rotate({0})'.format(radClip(i)));
+        if (i > 180) {
+          maskB.appendChild(rect);
+        } else {
+          maskA.appendChild(rect);
+        }
+      }
+    }
+
+    function drawClock() {
+      var date = new Date();
+      var minuteAngle = 90 + (date.getSeconds() / 60 + date.getMinutes()) / 60 * 360;
+      var hoursAngle = 90 + (date.getHours() + date.getMinutes()/60) / 12 * 360;
+
+      els.hour.style.transform = 'rotate({0}deg)'.format(hoursAngle);
+      els.minute.style.transform = els.minuteHand.style.transform = 'rotate({0}deg)'.format(minuteAngle);
+
+      requestAnimationFrame(drawClock);
+    }
+
+    function drawMarkers() {
+      var i = 1;
+      for(i; i <= 12; i++) {
+        var el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        el.setAttribute('cx', '260');
+        el.setAttribute('cy', rad);
+        el.setAttribute('r', '2.2');
+        el.setAttribute('transform', 'rotate({0})'.format(radClip(i * 360 / 12)));
+        document.getElementById('markers').appendChild(el);
+      }
+    }
+
+    return function() {
+      drawConical(els.hourMask);
+      drawConical(els.minuteMask);
+      drawClock();
+      drawMarkers();
+    }
+  })();
+
+  /*Spring.Watch = (function() {
 
     var currentMinutes;
     
@@ -183,22 +260,19 @@
         drawDate(d.getDay(), d.getDate(), d.getMonth());
       }
     }
-  })();
+  })();*/
 
-  Spring.init = function() {
-    var param = getParameterByName('t');
+  var param = getParameterByName('t');
 
-    this.Unsplash.init();
-    //this.Watch.initGradients();
+  Spring.Unsplash();
+  Spring.Watch();
+  //this.Watch.initGradients();
 
-    if(param) {
-      var time = param.split(':');
-      //this.Watch.drawCustomTime(~~time[0], ~~time[1]);
-    } else {
-      //this.Watch.init();
-    }
-  };
-
-  Spring.init();
+  if(param) {
+    var time = param.split(':');
+    //this.Watch.drawCustomTime(~~time[0], ~~time[1]);
+  } else {
+    //this.Watch.init();
+  }
 
 })(window, document);

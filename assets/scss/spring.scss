@@ -1,11 +1,17 @@
 @import "../../bower_components/reset-scss/reset";
 
+$watch-size: 300px;
+$hour-color: #9e6ab9;
+$minute-color: #c3205a;
+$minute-hand-color: #00c6f2;
+$black: #111111;
+
 body {
   background-color: #8aa7d2;
   overflow: hidden;
 }
 
-#fs-background {
+#fs-bg {
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
@@ -13,11 +19,8 @@ body {
   opacity: 0;
   width: 100vw;
   height: 100vh;
+  z-index: 1;
 }
-
-$watch-size: 300px;
-$colorHour: #e9447e;
-$colorMinute: #b9afde;
 
 #watch {
   position: fixed;
@@ -25,9 +28,18 @@ $colorMinute: #b9afde;
   right: 10px;
   width: $watch-size;
   height: $watch-size;
+  z-index: 2;
 
-  #center {
-    fill: #111111;
+  .center-shadow feFlood,
+  .inset-shadow feFlood {
+    flood-color: $black;
+  }
+
+  #markers {
+    fill: $black;
+  }
+
+  .center {
     r: $watch-size/4;
     cx: $watch-size/2;
     cy: $watch-size/2;
@@ -51,16 +63,22 @@ $colorMinute: #b9afde;
     cx: $watch-size/2;
     cy: $watch-size/2;
     r: $watch-size/2;
+    transform-origin: center;
   }
 
   #hour {
-    mask: url(#mask-hour);
-    fill: $colorHour;
+    fill: $hour-color;
   }
 
   #minute {
-    mask: url(#mask-minute);
-    fill: $colorMinute;
+    fill: $minute-color;
+    mix-blend-mode: multiply;
+  }
+
+  #minute-hand {
+    stroke-width: 6;
+    stroke: $minute-hand-color;
+    transform-origin: right;
   }
 }
 

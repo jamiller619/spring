@@ -18,41 +18,71 @@
     <p class="date"></p>
   </div>
   <svg id="watch">
+
+    <defs>
+    
+      <filter id="center-shadow">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+        <feOffset dx="3" dy="3" result="offsetBlur" />
+        <feFlood flood-opacity="0.5" />
+        <feComposite operator="in" in2="offsetBlur" />
+        <feMerge>
+          <feMergeNode />
+          <feMergeNode in="SourceGraphic" />
+        </feMerge>
+      </filter>
+      
+      <linearGradient id="center-fill" x1="1" x2="0" y1="1" y2="0">
+        <stop offset="0%"  stop-color="#0c0c0c" />
+        <stop offset="100%" stop-color="#1b1b1b" />
+      </linearGradient>
+
+      <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%">
+        <feComponentTransfer in="SourceAlpha">
+          <feFuncA type="table" tableValues="1 0" />
+        </feComponentTransfer>
+        <feGaussianBlur stdDeviation="30" />
+        <feOffset dx="5" dy="5" result="offsetBlur" />
+        <feFlood result="color" />
+        <feComposite in2="offsetBlur" operator="in" />
+        <feComposite in2="SourceAlpha" operator="in" />
+        <feMerge>
+          <feMergeNode in="SourceGraphic" />
+          <feMergeNode />
+        </feMerge>
+      </filter>
+
+      <clipPath id="overlay-clip">
+        <rect />
+      </clipPath>
+
+      <mask id="hour-mask">
+        <g>
+          <rect class="angle-rect" />
+          <g class="mask-a"></g>
+          <g class="mask-b" clip-path="url(#overlay-clip)"></g>
+        </g>
+      </mask>
+
+      <mask id="minute-mask">
+        <g>
+          <rect class="angle-rect" />
+          <g class="mask-a"></g>
+          <g class="mask-b" clip-path="url(#overlay-clip)"></g>
+        </g>
+      </mask>
+
+    </defs>
+
     <g>
-      <defs>
-        <clipPath id="overlay-clip">
-          <rect />
-        </clipPath>
-        <mask id="mask-hour">
-          <g>
-            <rect class="angle-rect" />
-            <g class="mask-a"></g>
-            <g class="mask-b" clip-path="url(#overlay-clip)"></g>
-          </g>
-        </mask>
-        <mask id="mask-minute">
-          <g>
-            <rect class="angle-rect" />
-            <g class="mask-a"></g>
-            <g class="mask-b" clip-path="url(#overlay-clip)"></g>
-          </g>
-        </mask>
-      </defs>
-      <!--<circle id="shadow" style="fill:rgba(0,0,0,0.1)" cx="97" cy="100" r="87" filter="url(#innerShadow)"></circle>-->
-      <circle id="hour">
-        <animatetransform attributeName="transform"
-                          type="rotate"
-                          dur="43200s"
-                          repeatCount="indefinite"/>
-      </circle>
-      <circle id="minute">
-        <animatetransform attributeName="transform"
-                          type="rotate"
-                          dur="3600s"
-                          repeatCount="indefinite"/>
-      </circle>
-      <circle id="center"></circle>
+      <circle id="hour" mask="url(#hour-mask)" filter="url(#inset-shadow)" />
+      <circle id="minute" mask="url(#minute-mask)" />
+      <line id="minute-hand" x1="0" />
+      <circle class="center" filter="url(#center-shadow)" />
+      <circle class="center" fill="url(#center-fill)" />
+      <g id="markers"></g>
     </g>
+    
   </svg>
   <!--<ul id="watch" role="presentation" aria-hidden="true">
     <li class="indicators"></li>
@@ -61,64 +91,14 @@
     <li class="minute-hand"></li>
     <li class="center"></li>
   </ul>-->
-  <img id="fs-background" alt="Unsplash background image" />
+  <img id="fs-bg" alt="Unsplash background image" />
   <!-- build:js js/spring.min.js -->
   <script src="bower_components/conic-gradient/index.js"></script>
   <script src="assets/js/spring.js"></script>
   <!-- endbuild -->
   <script>
-  var date = new Date();
-  var hoursAngle = 90 + 360 * date.getHours() / 12 + date.getMinutes() / 2;
-  var minuteAngle = 90 + 360 * date.getMinutes() / 60;
-  var cx = 150;
-    var cy = 150;
 
-    var joiner = function(val) {
-      return [val, cx, cy].join(' ');
-    }
-
-    function makeRGBA(degree){
-
-      var ratio = 1 - Math.abs((degree / 360));
-      var colorVal = Math.floor(255 * ratio);
-      var colorArray = [colorVal,colorVal,colorVal]
-      return 'rgba('+colorArray.join(',')+',1)';
-
-
-    }
-
-    function drawConical(container) {
-      var maskA = container.querySelector('.mask-a'),
-        maskB = container.querySelector('.mask-b');
-
-      for(i = 1 ; i < 360 ; i++){
-
-        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('width', '10vw');
-        rect.setAttribute('height', '10vw');
-        rect.setAttribute('fill', makeRGBA(i));
-        rect.setAttribute('transform', 'rotate(' + joiner(i) + ')');
-        
-        if(i > 180){
-          maskB.appendChild(rect);
-        }else{
-          maskA.appendChild(rect);
-        }
-
-      }
-    }
-
-    drawConical(document.getElementById('mask-hour'));
-    drawConical(document.getElementById('mask-minute'));
-
-    var hour = document.getElementById('hour').querySelector('animateTransform');
-    var minute = document.getElementById('minute').querySelector('animateTransform');
-
-    hour.setAttribute('from', joiner(hoursAngle));
-    hour.setAttribute('to', joiner(hoursAngle + 360));
-
-    minute.setAttribute('from', joiner(minuteAngle));
-    minute.setAttribute('to', joiner(minuteAngle + 360));
+  
   </script>
 </body>
 </html>
