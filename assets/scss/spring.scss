@@ -1,28 +1,36 @@
 @import "../../bower_components/reset-scss/reset";
 
-$watch-size: 300px;
+$watch-size: 250px;
 $hour-color: #9e6ab9;
 $minute-color: #c3205a;
-$minute-hand-color: #00c6f2;
 $black: #111111;
 
 body {
-  background-color: #8aa7d2;
   overflow: hidden;
+
+  &.loaded {
+    #fs-bg {
+      opacity: 1;
+    }
+    #watch #watch-shadow {
+      opacity: .5;
+    }
+    #digital {
+      opacity: .7;
+    }
+  }
 }
 
 #fs-bg {
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-  transition: all .2s ease;
+  position: fixed;
   opacity: 0;
-  width: 100vw;
-  height: 100vh;
+  transition: opacity 1s;
   z-index: 1;
 }
 
 #watch {
+  perspective: 200px;
+  backface-visibility: hidden;
   position: fixed;
   bottom: 10px;
   right: 10px;
@@ -35,12 +43,7 @@ body {
     flood-color: $black;
   }
 
-  #markers {
-    fill: $black;
-  }
-
-  .center {
-    r: $watch-size/4;
+  circle {
     cx: $watch-size/2;
     cy: $watch-size/2;
   }
@@ -52,6 +55,12 @@ body {
     height: $watch-size/2;
   }
 
+  .mask-a rect,
+  .mask-b rect {
+    width: $watch-size/2;
+    height: $watch-size/2;
+  }
+
   .angle-rect {
     width: $watch-size;
     height: $watch-size;
@@ -60,9 +69,6 @@ body {
 
   #hour,
   #minute {
-    cx: $watch-size/2;
-    cy: $watch-size/2;
-    r: $watch-size/2;
     transform-origin: center;
   }
 
@@ -70,15 +76,38 @@ body {
     fill: $hour-color;
   }
 
-  #minute {
+  .minute-group {
     fill: $minute-color;
+  }
+
+  #minute {
     mix-blend-mode: multiply;
   }
 
   #minute-hand {
-    stroke-width: 6;
-    stroke: $minute-hand-color;
-    transform-origin: right;
+    x: 0;
+    y: $watch-size/2;
+    width: $watch-size/2;
+    height: 1.2%;
+    transform-origin: top right;
+    mix-blend-mode: screen;
+    opacity: 0;
+  }
+
+  #markers {
+    fill: $black;
+    opacity: 0;
+    circle {
+      cx: $watch-size - $watch-size/7.5;
+      cy: $watch-size/2;
+      r: 1%;
+    }
+  }
+
+  #watch-shadow {
+    r: $watch-size/2;
+    opacity: 0;
+    transition: opacity .5s; 
   }
 }
 
@@ -155,25 +184,25 @@ body {
 
 #digital {
   position: fixed;
-  //right: 230px;
+  right: $watch-size + 20;
   bottom: 10px;
   font-weight: lighter;
   font-family: Helvetica, Arial, sans-serif;
   color: white;
-  text-shadow: 1px 1px 2px rgba(11,150,173,.7);
-  mix-blend-mode: luminosity;
+  text-shadow: 1px 1px 2px $black;
+  font-size: 65px;
   z-index: 2;
   transition: all .5s;
   opacity: 0;
 
   .date {
-    font-size: 20px;
+    font-size: .26em;
     letter-spacing: 1px;
     text-align: right;
   }
 
   .time {
-    font-size: 75px;
+    font-size: 1em;
 
     span {
       display: block;

@@ -16,6 +16,6 @@
   ],
   "dependencies": {
     "reset-scss": "^2.0.2",
-    "conic-gradient": "https://raw.githubusercontent.com/LeaVerou/conic-gradient/gh-pages/conic-gradient.js"
+    "animejs": "https://github.com/juliangarnier/anime.git#^1.1.2"
   }
 }

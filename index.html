@@ -10,18 +10,16 @@
 <body>
   <div id="digital">
     <p class="time">
-      <span class="hour"></span>
+      <span class="hours"></span>
       <span class="colon">:</span>
       <span class="minutes"></span>
       <span class="am-pm"></span>
     </p>
     <p class="date"></p>
   </div>
-  <svg id="watch">
-
+  <svg id="watch" data-color-minute="" data-color-hour="">
     <defs>
-    
-      <filter id="center-shadow">
+      <filter id="drop-shadow">
         <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
         <feOffset dx="3" dy="3" result="offsetBlur" />
         <feFlood flood-opacity="0.5" />
@@ -33,7 +31,12 @@
       </filter>
       
       <linearGradient id="center-fill" x1="1" x2="0" y1="1" y2="0">
-        <stop offset="0%"  stop-color="#0c0c0c" />
+        <stop offset="0%" stop-color="#0c0c0c" />
+        <stop offset="100%" stop-color="#1b1b1b" />
+      </linearGradient>
+
+      <linearGradient id="shadow-fill" x1="1" x2="0" y1="1" y2="0">
+        <stop offset="0%" stop-color="#0c0c0c" />
         <stop offset="100%" stop-color="#1b1b1b" />
       </linearGradient>
 
@@ -74,31 +77,22 @@
 
     </defs>
 
-    <g>
+    <g class="main">
+      <circle id="watch-shadow" filter="url(#drop-shadow)" />
       <circle id="hour" mask="url(#hour-mask)" filter="url(#inset-shadow)" />
-      <circle id="minute" mask="url(#minute-mask)" />
-      <line id="minute-hand" x1="0" />
-      <circle class="center" filter="url(#center-shadow)" />
+      <g class="minute-group">
+        <rect id="minute-hand" />
+        <circle id="minute" mask="url(#minute-mask)" />
+      </g>
+      <circle class="center" filter="url(#drop-shadow)" />
       <circle class="center" fill="url(#center-fill)" />
       <g id="markers"></g>
     </g>
-    
   </svg>
-  <!--<ul id="watch" role="presentation" aria-hidden="true">
-    <li class="indicators"></li>
-    <li class="minutes"></li>
-    <li class="hour"></li>
-    <li class="minute-hand"></li>
-    <li class="center"></li>
-  </ul>-->
   <img id="fs-bg" alt="Unsplash background image" />
   <!-- build:js js/spring.min.js -->
-  <script src="bower_components/conic-gradient/index.js"></script>
+  <script src="bower_components/animejs/anime.js"></script>
   <script src="assets/js/spring.js"></script>
   <!-- endbuild -->
-  <script>
-
-  
-  </script>
 </body>
 </html>
