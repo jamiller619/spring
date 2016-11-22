@@ -4,6 +4,9 @@
  * SVG Conical Gradients: https://codepen.io/zapplebee/pen/ByvPMN/
 **/
 
+// first things first
+window.stop();
+
 (function(window, document) {
   "use strict";
 
@@ -47,11 +50,11 @@
 
       bgImg.addEventListener('load', function() {
         var elapsed = new Date() - now;
-        if(elapsed < 1000) {
+        /*if(elapsed < 700) {
           setTimeout(complete, 500);
-        } else {
+        } else {*/
           complete();
-        }
+        //}
       });
     }
   })();
@@ -67,7 +70,7 @@
       minuteHand: document.getElementById('minute-hand'),
       hourMask: document.getElementById('hour-mask'),
       minuteMask: document.getElementById('minute-mask'),
-      centers: document.querySelectorAll('.center'),
+      center: document.getElementById('center'),
       markers: document.getElementById('markers')
     };
 
@@ -89,8 +92,9 @@
 
       for(i; i < 360; i += 5) {
         var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('fill', makeRGBA(i));
-        rect.setAttribute('transform', 'rotate({0})'.format(radClip(i)));
+        rect.style.fill = makeRGBA(i);
+        rect.style.transform = 'rotate({0}deg)'.format(i);
+
         if (i > 180) {
           maskB.appendChild(rect);
         } else {
@@ -120,7 +124,7 @@
       var i = 1;
       for(i; i <= 12; i++) {
         var el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        el.setAttribute('transform', 'rotate({0})'.format(radClip(i * 360 / 12)));
+        el.style.transform = 'rotate({0}deg)'.format(i * 360 / 12);
         markers.appendChild(el);
       }
     }
@@ -129,23 +133,24 @@
       var angles = getAngles();
 
       var center = anime({
-        targets: els.centers,
-        duration: 1800,
+        targets: els.center,
+        duration: 1000,
         elasticity: 600,
-        r: [0, rad/2]
+        scale: [0, 1],
+        complete: drawTime
       });
 
       var rotateDefs = function(angle) {
         return {
           easing: 'easeOutCubic',
           value: [0, angle],
-          duration: 1200
+          duration: 800
         }
       };
 
-      var radiusDefs = {
-        value: [0, rad],
-        duration: 900,
+      var scaleDefs = {
+        value: [0, 1],
+        duration: 500,
         easing: 'easeOutCirc'
       };
 
@@ -153,14 +158,14 @@
         targets: els.hour,
         delay: 50,
         rotate: rotateDefs(angles.hour),
-        r: radiusDefs
+        scale: scaleDefs
       });
 
       var minute = anime({
         targets: els.minute,
         delay: 50,
         rotate: rotateDefs(angles.minute),
-        r: radiusDefs
+        scale: scaleDefs
       });
 
       var minuteHand = anime({
@@ -170,18 +175,17 @@
         opacity: {
           value: [0, 1],
           easing: 'linear',
-          duration: 100,
-          delay: 700
-        },
-        complete: drawTime
+          duration: 50,
+          delay: 500
+        }
       });
 
       var markers = anime({
         targets: document.getElementById('markers'),
-        delay: 900,
+        delay: 700,
         opacity: [0, 1],
         easing: 'linear',
-        duration: 200
+        duration: 100
       });
     }
 
@@ -204,6 +208,9 @@
     };
 
     var timeClasses = ['zero','one','two','three','four','five','six','seven','eight','nine'];
+    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var minutesLast;
 
     function emptyNode(node) {
       while(node.lastChild) {
@@ -225,14 +232,15 @@
     }
     
     function draw(date) {
-      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+
+      if(minutes == minutesLast) return;
+
       var displayDate = '{0}, {1} {2}'.format(days[date.getDay()], months[date.getMonth()], date.getDate());
           
       els.date.textContent = displayDate;
 
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
       var displayHours = (hours % 12 == 0 ? 12 : hours % 12).toString();
       var displayMinutes = minutes >= 10 ? minutes.toString() : '0' + minutes;
 
@@ -240,6 +248,8 @@
       emptyNode(els.minutes).appendChild(drawText(displayMinutes));
 
       els.amPm.textContent = hours > 11 ? 'PM' : 'AM';
+
+      minutesLast = minutes;
     }
 
     function init() {

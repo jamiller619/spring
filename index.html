@@ -22,7 +22,7 @@
       <filter id="drop-shadow">
         <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
         <feOffset dx="3" dy="3" result="offsetBlur" />
-        <feFlood flood-opacity="0.5" />
+        <feFlood flood-opacity="0.8" />
         <feComposite operator="in" in2="offsetBlur" />
         <feMerge>
           <feMergeNode />
@@ -84,8 +84,9 @@
         <rect id="minute-hand" />
         <circle id="minute" mask="url(#minute-mask)" />
       </g>
-      <circle class="center" filter="url(#drop-shadow)" />
-      <circle class="center" fill="url(#center-fill)" />
+      <circle id="center" fill="url(#center-fill)" />
+      <!--<circle class="center" filter="url(#drop-shadow)" />
+      <circle class="center" fill="url(#center-fill)" />-->
       <g id="markers"></g>
     </g>
   </svg>

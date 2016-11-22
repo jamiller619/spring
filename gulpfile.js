@@ -54,14 +54,9 @@ gulp.task('htmlmin', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('moveimages', function() {
-  gulp.src('assets/images/*')
-    .pipe(gulp.dest('dist/images'));
-});
-
 gulp.task('build', function(callback) {
   runSequence('clean:dist', 'sass', 'useref', 'htmlmin', 
-    ['moveimages', 'bump:minor'],
+    ['bump:minor'],
     callback
   );
 });

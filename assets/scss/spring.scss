@@ -8,16 +8,10 @@ $black: #111111;
 body {
   overflow: hidden;
 
-  &.loaded {
-    #fs-bg {
-      opacity: 1;
-    }
-    #watch #watch-shadow {
-      opacity: .5;
-    }
-    #digital {
-      opacity: .7;
-    }
+  & > * {
+    perspective: 100px;
+    backface-visibility: hidden;
+    transform: translateZ(0);
   }
 }
 
@@ -25,12 +19,14 @@ body {
   position: fixed;
   opacity: 0;
   transition: opacity 1s;
-  z-index: 1;
+  z-index: -1;
+
+  body.loaded & {
+    opacity: 1;
+  }
 }
 
 #watch {
-  perspective: 200px;
-  backface-visibility: hidden;
   position: fixed;
   bottom: 10px;
   right: 10px;
@@ -59,6 +55,8 @@ body {
   .mask-b rect {
     width: $watch-size/2;
     height: $watch-size/2;
+    transform: rotate(0deg);
+    transform-origin: $watch-size/2 $watch-size/2;
   }
 
   .angle-rect {
@@ -68,7 +66,26 @@ body {
   }
 
   #hour,
-  #minute {
+  #minute,
+  #minute-hand {
+    r: $watch-size/2;
+    transform: rotate(0deg);
+  }
+
+  #center {
+    r: $watch-size/4;
+  }
+
+  #hour,
+  #minute,
+  #minute-hand,
+  #center {
+    transform: scale(0);
+  }
+
+  #hour,
+  #minute,
+  #center {
     transform-origin: center;
   }
 
@@ -101,84 +118,19 @@ body {
       cx: $watch-size - $watch-size/7.5;
       cy: $watch-size/2;
       r: 1%;
+      transform: rotate(0deg);
+      transform-origin: $watch-size/2 $watch-size/2;
     }
   }
 
   #watch-shadow {
     r: $watch-size/2;
     opacity: 0;
-    transition: opacity .5s; 
-  }
-}
+    transition: opacity .5s;
 
-#watch-bak {
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-  width: 210px;
-  height: 210px;
-  background: rgba(255,255,255,.5);
-  border-radius: 50%;
-  z-index: 2;
-  transform: perspective(600px);
-  
-  li {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 210px;
-    height: 210px;
-  }
-
-  .multiply {
-    mix-blend-mode: multiply;
-  }
-
-  .rotate[data-init="false"] {
-    transform: perspective(600px);
-    transition: transform 1.2s ease;
-  }
-
-  .circle {
-    border-radius: 50%;
-  }
-
-  .minutes,
-  .hour {
-    @extend .multiply;
-    @extend .rotate;
-    @extend .circle;
-  }
-
-  .minutes {
-    transform: rotate(0deg);
-  }
-
-  .hour {
-    transform: rotate(6deg);
-  }
-
-  .center {
-    @extend .circle;
-    width: 50%;
-    height: 50%;
-    background-color: #191d1f;
-    margin-left: 25%;
-    margin-top: 25%;
-    box-shadow: 2px 2px 8px rgba(0,0,0,.8);
-  }
-
-  .minute-hand {
-    @extend .rotate;
-    width: 4px;
-    height: 50%;
-    left: calc(50% - 2px);
-    background-color: rgb(0,215,255);
-    transform-origin: bottom;
-  }
-
-  .indicators {
-    background-image: url(../images/indicators.png);
+    body.loaded & {
+      opacity: .5;
+    }
   }
 }
 
@@ -192,8 +144,13 @@ body {
   text-shadow: 1px 1px 2px $black;
   font-size: 65px;
   z-index: 2;
-  transition: all .5s;
+  transition: opacity .5s;
   opacity: 0;
+  z-index: 1;
+
+  body.loaded & {
+    opacity: .7;
+  }
 
   .date {
     font-size: .26em;
