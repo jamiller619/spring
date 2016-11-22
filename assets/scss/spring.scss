@@ -72,20 +72,20 @@ body {
     transform: rotate(0deg);
   }
 
-  #center {
+  .center {
     r: $watch-size/4;
   }
 
   #hour,
   #minute,
   #minute-hand,
-  #center {
+  .center {
     transform: scale(0);
   }
 
   #hour,
   #minute,
-  #center {
+  .center {
     transform-origin: center;
   }
 

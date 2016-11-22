@@ -50,11 +50,7 @@ window.stop();
 
       bgImg.addEventListener('load', function() {
         var elapsed = new Date() - now;
-        /*if(elapsed < 700) {
-          setTimeout(complete, 500);
-        } else {*/
           complete();
-        //}
       });
     }
   })();
@@ -70,7 +66,8 @@ window.stop();
       minuteHand: document.getElementById('minute-hand'),
       hourMask: document.getElementById('hour-mask'),
       minuteMask: document.getElementById('minute-mask'),
-      center: document.getElementById('center'),
+      center: document.querySelector('.center'),
+      //center: document.getElementById('center'),
       markers: document.getElementById('markers')
     };
 
