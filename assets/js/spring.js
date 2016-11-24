@@ -7,24 +7,32 @@
 // first things first
 window.stop();
 
-(function(window, document) {
-  "use strict";
+(function(window, document, anime) {
+  'use strict';
+
+  function format() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  }
 
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    var results = regex.exec(url);
     if (!results) return null;
     if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
   var Spring = window.Spring = {};
 
   Spring.Unsplash = (function() {
-    var now = new Date();
-
     function complete() {
       document.body.classList.add('loaded');
     }
@@ -35,33 +43,24 @@ window.stop();
 
       bgImg.setAttribute('src', bgUrl);
 
-      bgImg.addEventListener('load', function() {
-        var elapsed = new Date() - now;
-          complete();
-      });
-    }
+      bgImg.addEventListener('load', complete);
+    };
   })();
 
   Spring.Watch = (function() {
-    
-    var watchSize = 250;
-    var rad = watchSize/2;
-    var customDate = getParameterByName('d') ? getParameterByName('d').split(':') : false; 
+    var customTime = getParameterByName('t') ? getParameterByName('t').split(':') : false;
+    var container = document.getElementById('watch'); 
     var date, angles, minuteRotate, minutes, hours, ratio, colorVal, colorArray, i;
 
     var els = {
       hour: document.getElementById('hour'),
       minute: document.getElementById('minute'),
-      minuteHand: document.getElementById('minute-hand'),
+      minuteHand: document.getElementById('minute-hand'), 
       hourMask: document.getElementById('hour-mask'),
       minuteMask: document.getElementById('minute-mask'),
       center: document.querySelector('.center'),
       markers: document.getElementById('markers')
     };
-
-    function radClip(val) {
-      return [val, rad, rad].join(' ');
-    }
 
     function makeRGBA(degree) {
       ratio = 1 - Math.abs((degree / 360));
@@ -89,24 +88,26 @@ window.stop();
     }
 
     function getAngles() {
-      date = customDate && Spring.debug
-        ? new Date(date.getFullYear(), date.getMonth(), date.getDate(), customDate[0], customDate[1])
-        : new Date();
+      date = new Date();
 
-      minutes = 90 + (date.getSeconds() / 60 + date.getMinutes()) / 60;
-      hours = 90 + (date.getHours() + date.getMinutes()/60) / 12;
+      if(customTime && Spring.debug) {
+        date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), customTime[0], customTime[1]);
+      }
+
+      minutes = (date.getSeconds() / 60 + date.getMinutes()) / 60;
+      hours = (date.getHours() + date.getMinutes()/60) / 12;
 
       return {
-        minute: (minutes * 360) % 360,
-        hour: (hours * 360) % 360
-      }
+        minute: 90 + (minutes * 360) % 360,
+        hour: 90 + (hours * 360) % 360
+      };
     }
 
     function renderTime() {
       angles = getAngles();
       minuteRotate = `rotate(${angles.minute}deg)`;
 
-      els.minute.style.transform = els.minuteHand.style = minuteRotate;
+      els.minute.style.transform = els.minuteHand.style.transform = minuteRotate;
       els.hour.style.transform = `rotate(${angles.hour}deg)`;
 
       requestAnimationFrame(renderTime);
@@ -117,14 +118,14 @@ window.stop();
       for(i = 1; i <= 12; i++) {
         var el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         el.style.transform = `rotate(${i * 360 / 12}deg)`;
-        markers.appendChild(el);
+        els.markers.appendChild(el);
       }
     }
 
     function animate() {
       var angles = getAngles();
 
-      var center = anime({
+      anime({
         targets: els.center,
         duration: 1000,
         elasticity: 600,
@@ -132,38 +133,32 @@ window.stop();
         complete: renderTime
       });
 
-      var rotateDefs = function(angle) {
-        return {
+      anime({
+        targets: document.querySelectorAll('.conical'),
+        delay: 50,
+        rotate: {
           easing: 'easeOutCubic',
-          value: [0, angle],
-          duration: 800
+          duration: 800,
+          value: function(el) {
+            var angle = el.id == 'hour' ? angles.hour : angles.minute;
+            return [angle - 180 + 'deg', angle + 'deg'];
+          }
+        },
+        scale: {
+          value: [0, 1],
+          duration: 500,
+          easing: 'easeOutCirc'
         }
-      };
-
-      var scaleDefs = {
-        value: [0, 1],
-        duration: 500,
-        easing: 'easeOutCirc'
-      };
-
-      var hour = anime({
-        targets: els.hour,
-        delay: 50,
-        rotate: rotateDefs(angles.hour),
-        scale: scaleDefs
       });
 
-      var minute = anime({
-        targets: els.minute,
-        delay: 50,
-        rotate: rotateDefs(angles.minute),
-        scale: scaleDefs
-      });
-
-      var minuteHand = anime({
+      anime({
         targets: els.minuteHand,
         delay: 50,
-        rotate: rotateDefs(angles.minute),
+        rotate: {
+          easing: 'easeOutCubic',
+          value: angles.minute + 'deg',
+          duration: 800
+        },
         opacity: {
           value: [0, 1],
           easing: 'linear',
@@ -172,8 +167,8 @@ window.stop();
         }
       });
 
-      var markers = anime({
-        targets: document.getElementById('markers'),
+      anime({
+        targets: els.minuteHand,
         delay: 700,
         opacity: [0, 1],
         easing: 'linear',
@@ -186,7 +181,7 @@ window.stop();
       renderConical(els.minuteMask);
       renderMarkers();
       animate();
-    }
+    };
   })();
 
   Spring.Digital = (function() {
@@ -259,4 +254,4 @@ window.stop();
   Spring.Watch();
   Spring.Digital();
 
-})(window, document);
+})(window, document, window.anime);

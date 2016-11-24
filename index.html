@@ -3,8 +3,8 @@
 <head>
   <title>New Tab</title>
   <meta charset="UTF-8">
-  <!-- build:css styles/spring.css -->
-  <link rel="stylesheet" href="dist/styles/spring.css">
+  <!-- build:css assets/spring.css -->
+  <link rel="stylesheet" href="dist/assets/spring.css">
   <!-- endbuild -->
 </head>
 <body>
@@ -74,9 +74,9 @@
 
     <g class="main">
       <circle id="watch-shadow" filter="url(#drop-shadow)" />
-      <circle id="hour" mask="url(#hour-mask)" filter="url(#inset-shadow)" />
+      <circle id="hour" class="conical" mask="url(#hour-mask)" filter="url(#inset-shadow)" />
       <g class="minute-group">
-        <circle id="minute" mask="url(#minute-mask)" />
+        <circle id="minute" class="conical" mask="url(#minute-mask)" />
         <rect id="minute-hand" />
       </g>
       <!--<circle id="center" fill="url(#center-fill)" />-->
@@ -86,8 +86,8 @@
     </g>
   </svg>
   <img id="fs-bg" alt="Unsplash background image" />
-  <!-- build:js js/spring.min.js -->
-  <script src="bower_components/animejs/anime.js"></script>
+  <!-- build:js assets/spring.js -->
+  <script src="assets/bower/animejs/anime.js"></script>
   <script src="assets/js/spring.js"></script>
   <!-- endbuild -->
 </body>

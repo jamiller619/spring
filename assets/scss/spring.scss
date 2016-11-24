@@ -1,4 +1,4 @@
-@import "../../bower_components/reset-scss/reset";
+@import "../bower/reset-scss/reset";
 
 $watch-size: 250px;
 $hour-color: #9e6ab9;
@@ -34,16 +34,6 @@ body {
   height: $watch-size + 10;
   z-index: 2;
 
-  .center-shadow feFlood,
-  .inset-shadow feFlood {
-    flood-color: $black;
-  }
-
-  circle {
-    cx: $watch-size/2;
-    cy: $watch-size/2;
-  }
-
   #overlay-clip rect {
     x: 0;
     y: $watch-size/2;
@@ -65,28 +55,26 @@ body {
     fill: white;
   }
 
-  #hour,
-  #minute,
-  #minute-hand {
-    r: $watch-size/2;
-    transform: rotate(0deg);
+  circle {
+    cx: $watch-size/2;
+    cy: $watch-size/2;
+    transform-origin: center;
+  }
+
+  .center-shadow feFlood,
+  .inset-shadow feFlood {
+    flood-color: $black;
   }
 
   .center {
     r: $watch-size/4;
-  }
-
-  #hour,
-  #minute,
-  #minute-hand,
-  .center {
     transform: scale(0);
   }
 
-  #hour,
-  #minute,
-  .center {
-    transform-origin: center;
+  .conical {
+    r: $watch-size/2;
+    transform: scale(0) rotate(0deg);
+    mix-blend-mode: multiply;
   }
 
   #hour {
@@ -97,17 +85,13 @@ body {
     fill: $minute-color;
   }
 
-  #minute,
-  #hour {
-    mix-blend-mode: multiply;
-  }
-
   #minute-hand {
     x: 0;
     y: $watch-size/2;
     width: $watch-size/2;
     height: 1.2%;
-    transform-origin: center right;
+    transform: rotate(0deg);
+    transform-origin: top right;
     mix-blend-mode: screen;
     opacity: 0;
   }

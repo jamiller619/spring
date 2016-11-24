@@ -1,7 +1,7 @@
 {
-  "name": "spring",
-  "description": "A simple, new tab page for Google Chrome",
-  "main": "index.js",
+  "name": "Spring",
+  "description": "A minimal, new tab page for Google Chrome",
+  "main": "assets/js/spring.js",
   "authors": [
     "Jeff Miller"
   ],
