@@ -49,7 +49,6 @@ window.stop();
 
   Spring.Watch = (function() {
     var customTime = getParameterByName('t') ? getParameterByName('t').split(':') : false;
-    var container = document.getElementById('watch'); 
     var date, angles, minuteRotate, minutes, hours, ratio, colorVal, colorArray, i;
 
     var els = {
