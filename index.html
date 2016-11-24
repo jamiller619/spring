@@ -35,11 +35,6 @@
         <stop offset="100%" stop-color="#1b1b1b" />
       </linearGradient>
 
-      <linearGradient id="shadow-fill" x1="1" x2="0" y1="1" y2="0">
-        <stop offset="0%" stop-color="#0c0c0c" />
-        <stop offset="100%" stop-color="#1b1b1b" />
-      </linearGradient>
-
       <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%">
         <feComponentTransfer in="SourceAlpha">
           <feFuncA type="table" tableValues="1 0" />
@@ -81,8 +76,8 @@
       <circle id="watch-shadow" filter="url(#drop-shadow)" />
       <circle id="hour" mask="url(#hour-mask)" filter="url(#inset-shadow)" />
       <g class="minute-group">
-        <rect id="minute-hand" />
         <circle id="minute" mask="url(#minute-mask)" />
+        <rect id="minute-hand" />
       </g>
       <!--<circle id="center" fill="url(#center-fill)" />-->
       <circle class="center" filter="url(#drop-shadow)" />

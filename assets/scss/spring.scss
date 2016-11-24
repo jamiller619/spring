@@ -28,10 +28,10 @@ body {
 
 #watch {
   position: fixed;
-  bottom: 10px;
-  right: 10px;
-  width: $watch-size;
-  height: $watch-size;
+  bottom: 0px;
+  right: 0px;
+  width: $watch-size + 10;
+  height: $watch-size + 10;
   z-index: 2;
 
   .center-shadow feFlood,
@@ -97,7 +97,8 @@ body {
     fill: $minute-color;
   }
 
-  #minute {
+  #minute,
+  #hour {
     mix-blend-mode: multiply;
   }
 
@@ -106,7 +107,7 @@ body {
     y: $watch-size/2;
     width: $watch-size/2;
     height: 1.2%;
-    transform-origin: top right;
+    transform-origin: center right;
     mix-blend-mode: screen;
     opacity: 0;
   }

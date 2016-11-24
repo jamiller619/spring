@@ -10,18 +10,6 @@ window.stop();
 (function(window, document) {
   "use strict";
 
-  if (!String.prototype.format) {
-    String.prototype.format = function() {
-      var args = arguments;
-      return this.replace(/{(\d+)}/g, function(match, number) { 
-        return typeof args[number] != 'undefined'
-          ? args[number]
-          : match
-        ;
-      });
-    };
-  }
-
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
@@ -32,11 +20,10 @@ window.stop();
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   }
 
-  var Spring = window.Spring = Spring || {};
+  var Spring = window.Spring = {};
 
   Spring.Unsplash = (function() {
     var now = new Date();
-    var url = 'https://source.unsplash.com/featured/{0}/{1}';
 
     function complete() {
       document.body.classList.add('loaded');
@@ -44,7 +31,7 @@ window.stop();
 
     return function() {
       var bgImg = document.getElementById('fs-bg');
-      var bgUrl = url.format(window.innerWidth + 'x' + window.innerHeight, getParameterByName('debug') ? '' : 'daily');
+      var bgUrl = `https://source.unsplash.com/featured/${window.innerWidth + 'x' + window.innerHeight}/${Spring.debug ? '' : 'daily'}`;
 
       bgImg.setAttribute('src', bgUrl);
 
@@ -59,6 +46,8 @@ window.stop();
     
     var watchSize = 250;
     var rad = watchSize/2;
+    var customDate = getParameterByName('d') ? getParameterByName('d').split(':') : false; 
+    var date, angles, minuteRotate, minutes, hours, ratio, colorVal, colorArray, i;
 
     var els = {
       hour: document.getElementById('hour'),
@@ -67,7 +56,6 @@ window.stop();
       hourMask: document.getElementById('hour-mask'),
       minuteMask: document.getElementById('minute-mask'),
       center: document.querySelector('.center'),
-      //center: document.getElementById('center'),
       markers: document.getElementById('markers')
     };
 
@@ -76,21 +64,21 @@ window.stop();
     }
 
     function makeRGBA(degree) {
-      var ratio = 1 - Math.abs((degree / 360));
-      var colorVal = Math.floor(255 * ratio);
-      var colorArray = [colorVal, colorVal, colorVal];
-      return 'rgba({0},1)'.format(colorArray.join(','));
+      ratio = 1 - Math.abs((degree / 360));
+      colorVal = Math.floor(255 * ratio);
+      colorArray = [colorVal, colorVal, colorVal];
+      return `rgba(${colorArray.join(',')},1)`;
     }
 
-    function drawConical(container) {
+    function renderConical(container) {
       var maskA = container.querySelector('.mask-a');
       var maskB = container.querySelector('.mask-b');
-      var i = 1;
+      var rect;
 
-      for(i; i < 360; i += 5) {
-        var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      for(i = 1; i < 360; i += 5) {
+        rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.style.fill = makeRGBA(i);
-        rect.style.transform = 'rotate({0}deg)'.format(i);
+        rect.style.transform = `rotate(${i}deg)`;
 
         if (i > 180) {
           maskB.appendChild(rect);
@@ -101,27 +89,34 @@ window.stop();
     }
 
     function getAngles() {
-      var date = new Date();
+      date = customDate && Spring.debug
+        ? new Date(date.getFullYear(), date.getMonth(), date.getDate(), customDate[0], customDate[1])
+        : new Date();
+
+      minutes = 90 + (date.getSeconds() / 60 + date.getMinutes()) / 60;
+      hours = 90 + (date.getHours() + date.getMinutes()/60) / 12;
+
       return {
-        minute: 90 + (date.getSeconds() / 60 + date.getMinutes()) / 60 * 360,
-        hour: 90 + (date.getHours() + date.getMinutes()/60) / 12 * 360
+        minute: (minutes * 360) % 360,
+        hour: (hours * 360) % 360
       }
     }
 
-    function drawTime() {
-      var angles = getAngles();
-      els.hour.style.transform = 'rotate({0}deg)'.format(angles.hour);
-      els.minute.style.transform = els.minuteHand.style.transform = 'rotate({0}deg)'.format(angles.minute);
+    function renderTime() {
+      angles = getAngles();
+      minuteRotate = `rotate(${angles.minute}deg)`;
 
-      requestAnimationFrame(drawTime);
+      els.minute.style.transform = els.minuteHand.style = minuteRotate;
+      els.hour.style.transform = `rotate(${angles.hour}deg)`;
+
+      requestAnimationFrame(renderTime);
     }
 
-    function drawMarkers() {
+    function renderMarkers() {
       els.markers.style.opacity = 1;
-      var i = 1;
-      for(i; i <= 12; i++) {
+      for(i = 1; i <= 12; i++) {
         var el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        el.style.transform = 'rotate({0}deg)'.format(i * 360 / 12);
+        el.style.transform = `rotate(${i * 360 / 12}deg)`;
         markers.appendChild(el);
       }
     }
@@ -134,7 +129,7 @@ window.stop();
         duration: 1000,
         elasticity: 600,
         scale: [0, 1],
-        complete: drawTime
+        complete: renderTime
       });
 
       var rotateDefs = function(angle) {
@@ -187,9 +182,9 @@ window.stop();
     }
 
     return function() {
-      drawConical(els.hourMask);
-      drawConical(els.minuteMask);
-      drawMarkers();
+      renderConical(els.hourMask);
+      renderConical(els.minuteMask);
+      renderMarkers();
       animate();
     }
   })();
@@ -207,7 +202,7 @@ window.stop();
     var timeClasses = ['zero','one','two','three','four','five','six','seven','eight','nine'];
     var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    var minutesLast;
+    var hours, minutes, displayDate, displayHours, displayMinutes, minutesLast, fragment, span, i;
 
     function emptyNode(node) {
       while(node.lastChild) {
@@ -216,11 +211,11 @@ window.stop();
       return node;
     }
 
-    function drawText(word) {
-      var fragment = document.createDocumentFragment();
+    function renderText(word) {
+      fragment = document.createDocumentFragment();
 
-      for(var i=0; i<word.length; i++) {
-        var span = document.createElement('span');
+      for(i = 0; i < word.length; i++) {
+        span = document.createElement('span');
         span.textContent = word[i];
         span.className = timeClasses[~~word[i]];
         fragment.appendChild(span);
@@ -228,21 +223,21 @@ window.stop();
       return fragment;
     }
     
-    function draw(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
+    function render(date) {
+      hours = date.getHours();
+      minutes = date.getMinutes();
 
       if(minutes == minutesLast) return;
 
-      var displayDate = '{0}, {1} {2}'.format(days[date.getDay()], months[date.getMonth()], date.getDate());
+      displayDate = `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
           
       els.date.textContent = displayDate;
 
-      var displayHours = (hours % 12 == 0 ? 12 : hours % 12).toString();
-      var displayMinutes = minutes >= 10 ? minutes.toString() : '0' + minutes;
+      displayHours = (hours % 12 == 0 ? 12 : hours % 12).toString();
+      displayMinutes = minutes >= 10 ? minutes.toString() : '0' + minutes;
 
-      emptyNode(els.hours).appendChild(drawText(displayHours));
-      emptyNode(els.minutes).appendChild(drawText(displayMinutes));
+      emptyNode(els.hours).appendChild(renderText(displayHours));
+      emptyNode(els.minutes).appendChild(renderText(displayMinutes));
 
       els.amPm.textContent = hours > 11 ? 'PM' : 'AM';
 
@@ -250,15 +245,15 @@ window.stop();
     }
 
     function init() {
-      var date = new Date();
-      draw(date);
-
+      render(new Date());
       requestAnimationFrame(init);
     }
 
     return init;
 
   })();
+
+  Spring.debug = getParameterByName('debug');
 
   Spring.Unsplash();
   Spring.Watch();
