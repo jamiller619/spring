@@ -54,9 +54,14 @@ gulp.task('build-html', function() {
     .pipe(gulp.dest('dist'));
 });
 
+gulp.task('move-images', function() {
+  gulp.src('assets/images/*')
+    .pipe(gulp.dest('dist/assets'));
+});
+
 gulp.task('build', function(callback) {
   runSequence('clean', 'build-css', 'build-js', 'build-html', 
-    ['bump-version'],
+    ['move-images', 'bump-version'],
     callback
   );
 });

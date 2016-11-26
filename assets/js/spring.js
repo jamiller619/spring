@@ -39,7 +39,11 @@ window.stop();
 
     return function() {
       var bgImg = document.getElementById('fs-bg');
-      var bgUrl = `https://source.unsplash.com/featured/${window.innerWidth + 'x' + window.innerHeight}/${Spring.debug ? '' : 'daily'}`;
+      var bgUrl = 'https://source.unsplash.com/featured/' + window.innerWidth + 'x' + window.innerHeight;
+
+      if(!Spring.debug) {
+        bgUrl += '/daily';
+      }
 
       bgImg.setAttribute('src', bgUrl);
 
@@ -65,7 +69,7 @@ window.stop();
       ratio = 1 - Math.abs((degree / 360));
       colorVal = Math.floor(255 * ratio);
       colorArray = [colorVal, colorVal, colorVal];
-      return `rgba(${colorArray.join(',')},1)`;
+      return 'rgba(' + colorArray.join(',') + ',1)';
     }
 
     function renderConical(container) {
@@ -76,7 +80,7 @@ window.stop();
       for(i = 1; i < 360; i += 5) {
         rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         rect.style.fill = makeRGBA(i);
-        rect.style.transform = `rotate(${i}deg)`;
+        rect.style.transform = 'rotate(' + i + 'deg)';
 
         if (i > 180) {
           maskB.appendChild(rect);
@@ -104,10 +108,10 @@ window.stop();
 
     function renderTime() {
       angles = getAngles();
-      minuteRotate = `rotate(${angles.minute}deg)`;
+      minuteRotate = 'rotate(' + angles.minute + 'deg)';
 
       els.minute.style.transform = els.minuteHand.style.transform = minuteRotate;
-      els.hour.style.transform = `rotate(${angles.hour}deg)`;
+      els.hour.style.transform = 'rotate(' + angles.hour + 'deg)';
 
       requestAnimationFrame(renderTime);
     }
@@ -116,7 +120,7 @@ window.stop();
       els.markers.style.opacity = 1;
       for(i = 1; i <= 12; i++) {
         var el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        el.style.transform = `rotate(${i * 360 / 12}deg)`;
+        el.style.transform = 'rotate(' + i * 360 / 12 + 'deg)';
         els.markers.appendChild(el);
       }
     }
@@ -167,7 +171,7 @@ window.stop();
       });
 
       anime({
-        targets: els.minuteHand,
+        targets: els.markers,
         delay: 700,
         opacity: [0, 1],
         easing: 'linear',
@@ -223,7 +227,7 @@ window.stop();
 
       if(minutes == minutesLast) return;
 
-      displayDate = `${days[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
+      displayDate = days[date.getDay()] + ', ' + months[date.getMonth()] + ' ' + date.getDate();
           
       els.date.textContent = displayDate;
 
