@@ -4,11 +4,11 @@
  * SVG Conical Gradients: https://codepen.io/zapplebee/pen/ByvPMN/
 **/
 
-// first things first
-window.stop();
-
 (function(window, document, anime) {
   'use strict';
+
+  // first things first
+  window.stop();
 
   function getParameterByName(name, url) {
     if (!url) url = window.location.href;
