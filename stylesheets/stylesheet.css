@@ -1,51 +1,122 @@
+a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline}article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:after,blockquote:before,q:after,q:before{content:'';content:none}table{border-collapse:collapse;border-spacing:0}body{overflow:hidden}body>*{perspective:100px;backface-visibility:hidden;transform:translateZ(0)}#fs-bg{position:fixed;opacity:0;transition:opacity 1s;z-index:-1}body.loaded #fs-bg{opacity:1}#watch{position:fixed;bottom:0;right:0;width:260px;height:260px;z-index:2}#watch #overlay-clip rect{x:0;y:125px;width:250px;height:125px}#watch .mask-a rect,#watch .mask-b rect{width:125px;height:125px;transform:rotate(0deg);transform-origin:125px 125px}#watch .angle-rect{width:250px;height:250px;fill:#fff}#watch circle{cx:125px;cy:125px;transform-origin:center}#watch .center-shadow feFlood,#watch .inset-shadow feFlood{flood-color:#111}#watch .center{r:62.5px;transform:scale(0)}#watch .conical{r:125px;transform:scale(0) rotate(0deg);mix-blend-mode:multiply}#watch #hour{fill:#9e6ab9}#watch .minute-group{fill:#c3205a}#watch #minute-hand{x:0;y:125px;width:125px;height:1.2%;transform:rotate(0deg);transform-origin:top right;mix-blend-mode:screen;opacity:0}#watch #markers{fill:#111;opacity:0}#watch #markers circle{cx:216.66667px;cy:125px;r:1%;transform:rotate(0deg);transform-origin:125px 125px}#watch #watch-shadow{r:125px;opacity:0;transition:opacity .5s}body.loaded #watch #watch-shadow{opacity:.5}#digital{position:fixed;right:270px;bottom:10px;font-weight:lighter;font-family:Helvetica,Arial,sans-serif;color:#fff;text-shadow:1px 1px 2px #111;font-size:65px;z-index:2;transition:opacity .5s;opacity:0;z-index:1}body.loaded #digital{opacity:.7}#digital .date{font-size:.26em;letter-spacing:1px;text-align:right}#digital .time{font-size:1em}#digital .time span{display:block;float:left}#digital .time .am-pm{margin-left:10px}#digital .time .colon{margin-right:1px;position:relative;bottom:4px}#digital .time .minutes .one:first-child{margin-left:-8px}#digital .time .hour .one:last-child{margin-right:-2px}#digital .time .one{letter-spacing:-6px;margin-left:-6px}
+
 * {
   box-sizing: border-box;
 }
 
-html {
-  background-size: cover;
-  background-image: url(../images/bg.jpg);
-  background-repeat: no-repeat;
-  width: 100vw;
-  height: 100vh;
-}
-
 body {
-  padding: 0;
-  margin: 0;
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.8em;
-  color: #656d75;
+  background-color: #f1ebf5;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.4;
+  color: black;
+  display: flex;
+  overflow: scroll;
 }
-a.btn {
-  text-decoration: none;
-  display: inline-block;
-  max-width: 90%;
-  padding: 8px 20px;
-  margin: 10px 0;
-  border: 4px solid #1e281e;
-  border-radius: 4px;
-  font-size: 22px;
-  color: #1e281e;
-  background: rgba(255,255,255,.4);
+main {
+  order: 2;
+  width: 50%;
+  padding:0 40px 40px 20px;
+  align-self: center;
 }
-h2 {
-  font-weight: 300;
+#macbook {
+  order: 1;
+  height: 100vh;
+  width: 60%;
 }
-.page-header {
-  text-align: center;
-  padding-top: 10px;
+#screenshot {
+  background: url(../images/macbook.jpg) no-repeat left center;
+  background-size: contain;
+  margin-left: -10vw;
+  height: 100vh;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }
-.project-tagline {
-  padding: 0 20px;
+#spring-app {
+  position: relative;
+  top: calc(50% + 15vw);
+  transform: scale(.75) translateY(-50%);
+  transform-origin: center;
+  right: 0;
+}
+a {
+  color: #5210f8;
 }
 .logo {
-  width: 220px;
+  background: url(../images/logo.svg) no-repeat;
+  background-size: 130px;
+  height: 105px;
+  color: transparent;
 }
-.screenshot {
+h2 {
+  font-size: 40px;
+  color: #f12177;
+  font-weight: normal;
+  line-height: 1;
+  margin: 30px 0;
+}
+h3 {
+  font-size: 26px;
+  font-weight: normal;
+  margin-bottom: 30px;
+}
+main p {
+  margin-bottom: 15px;
+}
+ul {
+  list-style: disc outside none;
+  padding-left: 30px;
+}
+li {
+  margin-bottom: .8em;
+}
+#digital .time {
+  line-height: 1;
+}
+body.loaded #watch #watch-shadow {
+  opacity: .1;
+}
+#dxby-paperjam {
   display: block;
-  margin: 20px auto 0;
-  max-height: calc(100vh - 370px);
-  max-width: 95%;
+  background: url(../images/dxby-paperjam.svg) no-repeat;
+  background-size: 100px 45px;
+  height: 45px;
+  width: 100px;
+  position: fixed;
+  bottom: 0;
+  right: 40px;
+}
+@media (max-width: 1024px) {
+  body {
+    flex-direction: column;
+  }
+  main {
+    order: 1;
+    width: 100%;
+    padding: 5%;
+  }
+  #macbook {
+    order: 2;
+    height: auto;
+    width: 100%;
+  }
+  #screenshot {
+    background-image: url(../images/macbook-watch.jpg);
+    background-position: center;
+    margin-left: 0;
+    transform: none;
+    top: 0;
+    height: 50vmax;
+    margin: 2%;
+  }
+  #spring-app {
+    display: none;
+  }
+  #dxby-paperjam {
+    position: relative;
+    order: 3;
+    left: 5%;
+    margin-bottom: 20px;
+  }
 }
