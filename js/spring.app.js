@@ -99,7 +99,7 @@
     function animate() {
       var angles = getAngles();
 
-      anime.speed = .2;
+      anime.speed = .75;
 
       anime({
         targets: els.center,
