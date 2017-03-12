@@ -28,14 +28,15 @@ var utils = window.utils = {
 var Spring = window.Spring = function(debug) {
   var my = this;
   this.watch = new Spring.Watch();
-  this.time = new Spring.Time(document.getElementById('digital'));
-  this.unsplash = new Spring.Unsplash(document.getElementById('fs-bg'), function() {
-    my.time.els.container.classList.add('loaded');
-  });
+  this.time = new Spring.Time(document.getElementById('time-digital'));
+  this.unsplash = new Spring.Unsplash();
 };
 
-Spring.Unsplash = function(container, loadCallback) {
-  this.container = container;
+Spring.Unsplash = function(loadCallback) {
+  this.container = document.createElement('img');
+  this.container.id = 'fs-bg';
+  this.container.setAttribute('alt', 'Unsplash background image');
+
   this.loadWait = 1000;
   this.loadCallback = loadCallback;
   this.init();
@@ -48,17 +49,20 @@ Spring.Unsplash.prototype.init = function() {
 
   if (!utils.debug) bgUrl += '/daily';
 
+  my.container.setAttribute('src', bgUrl);
+
+  /*my.container.addEventListener('load', function() {
+    var timeLoaded = Date.now();
+    var duration = timeLoaded - timeStart;
+    var wait = duration < my.loadWait ? duration : 0;
+    window.setTimeout(function() {
+      my.container.classList.add('loaded');
+      if (my.loadCallback && typeof(my.loadCallback) === 'function') my.loadCallback();
+    }, wait);
+  });*/
+
   fastdom.mutate(function() {
-    my.container.setAttribute('src', bgUrl);
-    my.container.addEventListener('load', function() {
-      var timeLoaded = Date.now();
-      var duration = timeLoaded - timeStart;
-      var wait = duration < my.loadWait ? duration : 0;
-      window.setTimeout(function() {
-        my.container.classList.add('loaded');
-        if (my.loadCallback && typeof(my.loadCallback) === 'function') my.loadCallback();
-      }, wait);
-    });
+    document.body.appendChild(my.container);
   });
 };
 
@@ -72,7 +76,8 @@ Spring.Watch = function() {
       minuteMask: document.getElementById('minute-mask'),
       center: document.querySelector('.center'),
       markers: document.getElementById('markers'),
-      shadow: document.getElementById('watch-shadow')
+      shadow: document.getElementById('watch-shadow'),
+      defs: document.getElementById('watch').querySelector('defs')
     };
     my.init();
   });
@@ -84,9 +89,18 @@ Spring.Watch.prototype.makeRGBA = function(degree) {
   return 'rgba(' + colorVal + ',' + colorVal + ',' + colorVal + ',1)';
 };
 
-Spring.Watch.prototype.renderConical = function(container) {
-  var maskAFragment = document.createDocumentFragment();
-  var maskBFragment = document.createDocumentFragment();
+Spring.Watch.prototype.renderConical = function(id) {
+  var container = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
+  var angle = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  var maskA = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  var maskB = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+  container.id = id;
+  angle.setAttribute('class', 'angle-rect');
+  maskA.setAttribute('class', 'mask-a');
+  maskB.setAttribute('class', 'mask-b');
+  maskB.setAttribute('clip-path', 'url(#overlay-clip)');
+
   var rect, i = 1;
 
   for(; i < 360; i += 5) {
@@ -95,16 +109,17 @@ Spring.Watch.prototype.renderConical = function(container) {
     rect.style.transform = 'rotate(' + i + 'deg)';
 
     if (i > 180) {
-      maskBFragment.appendChild(rect);
+      maskB.appendChild(rect);
     } else {
-      maskAFragment.appendChild(rect);
+      maskA.appendChild(rect);
     }
   }
 
-  fastdom.mutate(function() {
-    container.querySelector('.mask-a').appendChild(maskAFragment);
-    container.querySelector('.mask-b').appendChild(maskBFragment);
-  });
+  container.appendChild(angle);
+  container.appendChild(maskA);
+  container.appendChild(maskB);
+
+  return container;
 };
 
 Spring.Watch.prototype.getAngles = function() {
@@ -120,6 +135,7 @@ Spring.Watch.prototype.getAngles = function() {
 
 Spring.Watch.prototype.render = function() {
   var my = this, angles;
+  
   utils.throttle(function() {
     angles = my.getAngles();
     fastdom.mutate(function() {
@@ -170,10 +186,17 @@ Spring.Watch.prototype.animate = function() {
 };
 
 Spring.Watch.prototype.init = function() {
-  this.renderConical(this.els.hourMask);
-  this.renderConical(this.els.minuteMask);
-  this.renderMarkers();
-  this.animate();
+  var my = this;
+  var h = this.renderConical('hour-mask');
+  var m = this.renderConical('minute-mask');
+
+  fastdom.mutate(function() {
+    my.els.defs.appendChild(h);
+    my.els.defs.appendChild(m);
+
+    my.renderMarkers();
+    my.animate();
+  });
 };
 
 Spring.Time = function(container) {
@@ -238,4 +261,6 @@ Spring.Time.prototype.init = function() {
   });
 };
 
-var spring = window.spring = new Spring(utils.debug);
+//window.setTimeout(function() {
+  var spring = window.spring = new Spring(utils.debug);
+//}, 1000);

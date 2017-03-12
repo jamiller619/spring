@@ -6,7 +6,7 @@
   <link rel="stylesheet" inline href="dist/assets/spring.css">
 </head>
 <body>
-  <div id="digital">
+  <div id="time-digital">
     <p class="time">
       <span class="hours"></span>
       <span class="colon">:</span>
@@ -52,7 +52,7 @@
         <rect />
       </clipPath>
 
-      <mask id="hour-mask">
+      <!--<mask id="hour-mask">
         <g>
           <rect class="angle-rect" />
           <g class="mask-a"></g>
@@ -66,7 +66,7 @@
           <g class="mask-a"></g>
           <g class="mask-b" clip-path="url(#overlay-clip)"></g>
         </g>
-      </mask>
+      </mask>-->
 
     </defs>
 
@@ -82,7 +82,6 @@
       <circle id="watch-shadow" filter="url(#drop-shadow)" />
     </g>
   </svg>
-  <img id="fs-bg" alt="Unsplash background image" />
   <!-- build:js spring.js -->
   <script src="assets/bower/fastdom/fastdom.min.js"></script>
   <script src="assets/js/spring.js"></script>

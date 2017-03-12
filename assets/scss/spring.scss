@@ -10,15 +10,33 @@ body {
   overflow: hidden;
 }
 
-#fs-bg {
-  position: fixed;
-  opacity: 0;
-  transition: opacity .5s;
-  z-index: -1;
+@keyframes time-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: .7;
+  }
+}
 
-  &.loaded {
+@keyframes bg-appear {
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
+}
+
+#fs-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: bg-appear .5s .3s both;
 }
 
 #watch {
@@ -138,7 +156,7 @@ body {
   }
 }
 
-#digital {
+#time-digital {
   position: fixed;
   right: $watch-size + 20;
   bottom: 10px;
@@ -147,50 +165,45 @@ body {
   color: white;
   text-shadow: 1px 1px 2px $black;
   font-size: 65px;
-  z-index: 2;
-  transition: opacity 1s;
+  animation: time-appear .5s 1s both;
   opacity: 0;
-  z-index: 1;
+  z-index: 2;
+}
 
-  &.loaded {
-    opacity: .7;
+.date {
+  font-size: .26em;
+  letter-spacing: 1px;
+  text-align: right;
+}
+
+.time {
+  font-size: 1em;
+
+  span {
+    display: block;
+    float: left;
   }
 
-  .date {
-    font-size: .26em;
-    letter-spacing: 1px;
-    text-align: right;
+  .am-pm {
+    margin-left: 10px;
   }
 
-  .time {
-    font-size: 1em;
+  .colon {
+    margin-right: 1px;
+    position: relative;
+    bottom: 4px;
+  }
 
-    span {
-      display: block;
-      float: left;
-    }
+  .minutes .one:first-child {
+    margin-left: -8px;
+  }
 
-    .am-pm {
-      margin-left: 10px;
-    }
+  .hour .one:last-child {
+    margin-right: -2px;
+  }
 
-    .colon {
-      margin-right: 1px;
-      position: relative;
-      bottom: 4px;
-    }
-
-    .minutes .one:first-child {
-      margin-left: -8px;
-    }
-
-    .hour .one:last-child {
-      margin-right: -2px;
-    }
-
-    .one {
-      letter-spacing: -6px;
-      margin-left: -6px;
-    }
+  .one {
+    letter-spacing: -6px;
+    margin-left: -6px;
   }
 }
