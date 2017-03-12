@@ -3,9 +3,7 @@
 <head>
   <title>New Tab</title>
   <meta charset="utf-8">
-  <!-- build:css assets/spring.css -->
-  <link rel="stylesheet" href="dist/assets/spring.css">
-  <!-- endbuild -->
+  <link rel="stylesheet" inline href="dist/assets/spring.css">
 </head>
 <body>
   <div id="digital">
@@ -78,7 +76,6 @@
         <rect id="minute-hand" />
         <circle id="minute" class="conical" mask="url(#minute-mask)" />
       </g>
-      <!--<circle id="center" fill="url(#center-fill)" />-->
       <circle class="center" filter="url(#drop-shadow)" />
       <circle class="center" fill="url(#center-fill)" />
       <g id="markers"></g>
@@ -86,7 +83,7 @@
     </g>
   </svg>
   <img id="fs-bg" alt="Unsplash background image" />
-  <!-- build:js assets/spring.js -->
+  <!-- build:js spring.js -->
   <script src="assets/bower/fastdom/fastdom.min.js"></script>
   <script src="assets/js/spring.js"></script>
   <!-- endbuild -->
