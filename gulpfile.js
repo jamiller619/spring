@@ -20,7 +20,9 @@ gulp.task('browser-sync', function() {
   browserSync.init({
     server: {
       baseDir: './'
-    }
+    },
+    ghostMode: false,
+    notify: false
   });
 });
 

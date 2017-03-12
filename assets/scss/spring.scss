@@ -2,26 +2,21 @@
 
 $watch-size: 250px;
 $hour-color: #9e6ab9;
-$minute-color: #c3205a;
+$minute-color: #f12177;
 $black: #111111;
+$ease: cubic-bezier(.74,.15,.04,.96);
 
 body {
   overflow: hidden;
-
-  & > * {
-    perspective: 100px;
-    backface-visibility: hidden;
-    transform: translateZ(0);
-  }
 }
 
 #fs-bg {
   position: fixed;
   opacity: 0;
-  transition: opacity 1s;
+  transition: opacity .5s;
   z-index: -1;
 
-  body.loaded & {
+  &.loaded {
     opacity: 1;
   }
 }
@@ -45,7 +40,6 @@ body {
   .mask-b rect {
     width: $watch-size/2;
     height: $watch-size/2;
-    transform: rotate(0deg);
     transform-origin: $watch-size/2 $watch-size/2;
   }
 
@@ -69,20 +63,44 @@ body {
   .center {
     r: $watch-size/4;
     transform: scale(0);
+    transition: transform .5s $ease;
+
+    &.in {
+      transform: scale(1);
+    }
   }
 
   .conical {
     r: $watch-size/2;
-    transform: scale(0) rotate(0deg);
-    mix-blend-mode: multiply;
   }
 
   #hour {
     fill: $hour-color;
   }
 
-  .minute-group {
+  #minute {
     fill: $minute-color;
+  }
+
+  #hour,
+  #minute {
+    mix-blend-mode: multiply;
+  }
+
+  .minute-group {
+    transform-origin: center;
+  }
+
+  #hour,
+  .minute-group {
+    opacity: 0;
+    transition: transform .4s .1s $ease, opacity .5s .2s;
+    &.in {
+      opacity: 1;
+    }
+    &.off {
+      transition: none;
+    }
   }
 
   #minute-hand {
@@ -90,31 +108,32 @@ body {
     y: $watch-size/2;
     width: $watch-size/2;
     height: 1.2%;
-    transform: rotate(0deg);
     transform-origin: top right;
-    mix-blend-mode: screen;
-    opacity: 0;
+    fill: lighten($minute-color, 20%);
   }
 
   #markers {
     fill: $black;
     opacity: 0;
+    transition: opacity .6s .6s;
     circle {
       cx: $watch-size - $watch-size/7.5;
       cy: $watch-size/2;
       r: 1%;
-      transform: rotate(0deg);
       transform-origin: $watch-size/2 $watch-size/2;
+    }
+    &.in {
+      opacity: 1;
     }
   }
 
   #watch-shadow {
     r: $watch-size/2;
     opacity: 0;
-    transition: opacity .5s;
+    transition: opacity .5s .25s;
 
-    body.loaded & {
-      opacity: .5;
+    &.in {
+      opacity: .3;
     }
   }
 }
@@ -129,11 +148,11 @@ body {
   text-shadow: 1px 1px 2px $black;
   font-size: 65px;
   z-index: 2;
-  transition: opacity .5s;
+  transition: opacity 1s;
   opacity: 0;
   z-index: 1;
 
-  body.loaded & {
+  &.loaded {
     opacity: .7;
   }
 

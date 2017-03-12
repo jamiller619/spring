@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
   <title>New Tab</title>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <!-- build:css assets/spring.css -->
   <link rel="stylesheet" href="dist/assets/spring.css">
   <!-- endbuild -->
@@ -17,7 +17,7 @@
     </p>
     <p class="date"></p>
   </div>
-  <svg id="watch" data-color-minute="" data-color-hour="">
+  <svg id="watch">
     <defs>
       <filter id="drop-shadow">
         <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
@@ -73,21 +73,21 @@
     </defs>
 
     <g class="main">
-      <circle id="watch-shadow" filter="url(#drop-shadow)" />
       <circle id="hour" class="conical" mask="url(#hour-mask)" filter="url(#inset-shadow)" />
       <g class="minute-group">
-        <circle id="minute" class="conical" mask="url(#minute-mask)" />
         <rect id="minute-hand" />
+        <circle id="minute" class="conical" mask="url(#minute-mask)" />
       </g>
       <!--<circle id="center" fill="url(#center-fill)" />-->
       <circle class="center" filter="url(#drop-shadow)" />
       <circle class="center" fill="url(#center-fill)" />
       <g id="markers"></g>
+      <circle id="watch-shadow" filter="url(#drop-shadow)" />
     </g>
   </svg>
   <img id="fs-bg" alt="Unsplash background image" />
   <!-- build:js assets/spring.js -->
-  <script src="assets/bower/animejs/anime.js"></script>
+  <script src="assets/bower/fastdom/fastdom.min.js"></script>
   <script src="assets/js/spring.js"></script>
   <!-- endbuild -->
 </body>

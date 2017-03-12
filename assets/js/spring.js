@@ -1,250 +1,241 @@
-/*
+/**
  * Inspiration from:
  * SVG Clock: http://codepen.io/mohebifar/pen/KwdeMz
  * SVG Conical Gradients: https://codepen.io/zapplebee/pen/ByvPMN/
-**/
+ */
 
-(function(window, document, anime) {
-  'use strict';
-
-  // first things first
-  window.stop();
-
-  function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, '\\$&');
-    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-    var results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-  }
-
-  var Spring = window.Spring = {};
-
-  Spring.Unsplash = (function() {
-    function complete() {
-      document.body.classList.add('loaded');
-    }
-
-    return function() {
-      var bgImg = document.getElementById('fs-bg');
-      var bgUrl = 'https://source.unsplash.com/featured/' + window.innerWidth + 'x' + window.innerHeight;
-
-      if(!Spring.debug) {
-        bgUrl += '/daily';
+var utils = window.utils = {
+  debug: (function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('debug') === 'true' ? true : false;
+  })(),
+  throttleDelay: 1000,
+  throttle: function(callback) {
+    var timeLast, timeElapsed;
+    var step = function(time) {
+      if (!timeLast) timeLast = time;
+      timeElapsed = time - timeLast;
+      if (timeElapsed > utils.throttleDelay) {
+        timeLast = time;
+        callback();
       }
+      window.requestAnimationFrame(step);
+    }
+    window.requestAnimationFrame(step);
+  }
+};
 
-      bgImg.setAttribute('src', bgUrl);
+var Spring = window.Spring = function(debug) {
+  var my = this;
+  this.watch = new Spring.Watch();
+  this.time = new Spring.Time(document.getElementById('digital'));
+  this.unsplash = new Spring.Unsplash(document.getElementById('fs-bg'), function() {
+    my.time.els.container.classList.add('loaded');
+  });
+};
 
-      bgImg.addEventListener('load', complete);
-    };
-  })();
+Spring.Unsplash = function(container, loadCallback) {
+  this.container = container;
+  this.loadWait = 1000;
+  this.loadCallback = loadCallback;
+  this.init();
+};
 
-  Spring.Watch = (function() {
-    var customTime = getParameterByName('t') ? getParameterByName('t').split(':') : false;
-    var date, angles, minuteRotate, minutes, hours, ratio, colorVal, colorArray, i;
+Spring.Unsplash.prototype.init = function() {
+  var my = this;
+  var timeStart = Date.now();
+  var bgUrl = 'https://source.unsplash.com/featured/' + window.innerWidth + 'x' + window.innerHeight;
 
-    var els = {
+  if (!utils.debug) bgUrl += '/daily';
+
+  fastdom.mutate(function() {
+    my.container.setAttribute('src', bgUrl);
+    my.container.addEventListener('load', function() {
+      var timeLoaded = Date.now();
+      var duration = timeLoaded - timeStart;
+      var wait = duration < my.loadWait ? duration : 0;
+      window.setTimeout(function() {
+        my.container.classList.add('loaded');
+        if (my.loadCallback && typeof(my.loadCallback) === 'function') my.loadCallback();
+      }, wait);
+    });
+  });
+};
+
+Spring.Watch = function() {
+  var my = this;
+  fastdom.measure(function() {
+    my.els = {
       hour: document.getElementById('hour'),
-      minute: document.getElementById('minute'),
-      minuteHand: document.getElementById('minute-hand'), 
+      minute: document.querySelector('.minute-group'),
       hourMask: document.getElementById('hour-mask'),
       minuteMask: document.getElementById('minute-mask'),
       center: document.querySelector('.center'),
-      markers: document.getElementById('markers')
+      markers: document.getElementById('markers'),
+      shadow: document.getElementById('watch-shadow')
     };
+    my.init();
+  });
+};
 
-    function makeRGBA(degree) {
-      ratio = 1 - Math.abs((degree / 360));
-      colorVal = Math.floor(255 * ratio);
-      colorArray = [colorVal, colorVal, colorVal];
-      return 'rgba(' + colorArray.join(',') + ',1)';
+Spring.Watch.prototype.makeRGBA = function(degree) {
+  var ratio = 1 - Math.abs((degree / 360));
+  var colorVal = Math.floor(255 * ratio);
+  return 'rgba(' + colorVal + ',' + colorVal + ',' + colorVal + ',1)';
+};
+
+Spring.Watch.prototype.renderConical = function(container) {
+  var maskAFragment = document.createDocumentFragment();
+  var maskBFragment = document.createDocumentFragment();
+  var rect, i = 1;
+
+  for(; i < 360; i += 5) {
+    rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.style.fill = this.makeRGBA(i);
+    rect.style.transform = 'rotate(' + i + 'deg)';
+
+    if (i > 180) {
+      maskBFragment.appendChild(rect);
+    } else {
+      maskAFragment.appendChild(rect);
     }
+  }
 
-    function renderConical(container) {
-      var maskA = container.querySelector('.mask-a');
-      var maskB = container.querySelector('.mask-b');
-      var rect;
+  fastdom.mutate(function() {
+    container.querySelector('.mask-a').appendChild(maskAFragment);
+    container.querySelector('.mask-b').appendChild(maskBFragment);
+  });
+};
 
-      for(i = 1; i < 360; i += 5) {
-        rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.style.fill = makeRGBA(i);
-        rect.style.transform = 'rotate(' + i + 'deg)';
+Spring.Watch.prototype.getAngles = function() {
+  var d = new Date();
+  var minutes = (d.getSeconds() / 60 + d.getMinutes()) / 60;
+  var hours = (d.getHours() + d.getMinutes()/60) / 12;
 
-        if (i > 180) {
-          maskB.appendChild(rect);
-        } else {
-          maskA.appendChild(rect);
-        }
-      }
-    }
+  return {
+    minute: 90 + (minutes * 360) % 360,
+    hour: 90 + (hours * 360) % 360
+  };
+};
 
-    function getAngles() {
-      date = new Date();
+Spring.Watch.prototype.render = function() {
+  var my = this, angles;
+  utils.throttle(function() {
+    angles = my.getAngles();
+    fastdom.mutate(function() {
+      my.els.minute.style.transform = 'rotate(' + angles.minute + 'deg)';
+      my.els.hour.style.transform = 'rotate(' + angles.hour + 'deg)';
+    });
+  });
+  
+  fastdom.mutate(function() {
+    my.els.minute.classList.add('off');
+    my.els.hour.classList.add('off');
+  });
+};
 
-      if(customTime && Spring.debug) {
-        date = new Date(date.getFullYear(), date.getMonth(), date.getDate(), customTime[0], customTime[1]);
-      }
+Spring.Watch.prototype.renderMarkers = function() {
+  var my = this, i = 1, markersFragment = document.createDocumentFragment();
+  for(; i <= 12; i++) {
+    var el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    el.style.transform = 'rotate(' + i * 360 / 12 + 'deg)';
+    markersFragment.appendChild(el);
+  }
+  fastdom.mutate(function() {
+    my.els.markers.appendChild(markersFragment);
+  });
+};
 
-      minutes = (date.getSeconds() / 60 + date.getMinutes()) / 60;
-      hours = (date.getHours() + date.getMinutes()/60) / 12;
+Spring.Watch.prototype.animate = function() {
+  var my = this;
+  var angles = my.getAngles();
 
-      return {
-        minute: 90 + (minutes * 360) % 360,
-        hour: 90 + (hours * 360) % 360
-      };
-    }
+  fastdom.mutate(function() {
+    my.els.center.classList.add('in');
+    my.els.markers.classList.add('in');
+    my.els.shadow.classList.add('in');
 
-    function renderTime() {
-      angles = getAngles();
-      minuteRotate = 'rotate(' + angles.minute + 'deg)';
+    my.els.hour.style.transform = 'scale(0) rotate(' + (angles.hour - 180) +  'deg)';
+    my.els.minute.style.transform = 'scale(0) rotate(' + (angles.minute - 180) + 'deg)';
+    my.els.hour.style.transform = 'scale(1) rotate(' + angles.hour +  'deg)';
+    my.els.minute.style.transform = 'scale(1) rotate(' + angles.minute + 'deg)';
 
-      els.minute.style.transform = els.minuteHand.style.transform = minuteRotate;
-      els.hour.style.transform = 'rotate(' + angles.hour + 'deg)';
+    my.els.hour.classList.add('in');
+    my.els.minute.classList.add('in');
 
-      requestAnimationFrame(renderTime);
-    }
+    my.els.center.addEventListener('transitionend', function() {
+      my.render();
+    });
+  });
+};
 
-    function renderMarkers() {
-      els.markers.style.opacity = 1;
-      for(i = 1; i <= 12; i++) {
-        var el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        el.style.transform = 'rotate(' + i * 360 / 12 + 'deg)';
-        els.markers.appendChild(el);
-      }
-    }
+Spring.Watch.prototype.init = function() {
+  this.renderConical(this.els.hourMask);
+  this.renderConical(this.els.minuteMask);
+  this.renderMarkers();
+  this.animate();
+};
 
-    function animate() {
-      var angles = getAngles();
+Spring.Time = function(container) {
+  this.els = {
+    container: container,
+    hours: container.querySelector('.hours'),
+    minutes: container.querySelector('.minutes'),
+    amPm: container.querySelector('.am-pm'),
+    date: container.querySelector('.date')
+  };
+  this.init();
+};
 
-      anime({
-        targets: els.center,
-        duration: 1000,
-        elasticity: 600,
-        scale: [0, 1],
-        complete: renderTime
-      });
+Spring.Time.prototype.options = {
+  timeClasses: ['zero','one','two','three','four','five','six','seven','eight','nine'],
+  monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+};
 
-      anime({
-        targets: document.querySelectorAll('.conical'),
-        delay: 50,
-        rotate: {
-          easing: 'easeOutCubic',
-          duration: 800,
-          value: function(el) {
-            var angle = el.id == 'hour' ? angles.hour : angles.minute;
-            return [angle - 180 + 'deg', angle + 'deg'];
-          }
-        },
-        scale: {
-          value: [0, 1],
-          duration: 500,
-          easing: 'easeOutCirc'
-        }
-      });
+Spring.Time.prototype.emptyNode = function(node) {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild);
+  }
+  return node;
+};
 
-      anime({
-        targets: els.minuteHand,
-        delay: 50,
-        rotate: {
-          easing: 'easeOutCubic',
-          value: angles.minute + 'deg',
-          duration: 800
-        },
-        opacity: {
-          value: [0, 1],
-          easing: 'linear',
-          duration: 50,
-          delay: 500
-        }
-      });
+Spring.Time.prototype.renderText = function(word) {
+  var i = 0, l = word.length, fragment = document.createDocumentFragment(), span;
+  for(; i < l; i++) {
+    span = document.createElement('span');
+    span.textContent = word[i];
+    span.className = this.options.timeClasses[~~word[i]];
+    fragment.appendChild(span);
+  }
+  return fragment;
+};
 
-      anime({
-        targets: els.markers,
-        delay: 700,
-        opacity: [0, 1],
-        easing: 'linear',
-        duration: 100
-      });
-    }
+Spring.Time.prototype.render = function(date) {
+  var my = this;
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
 
-    return function() {
-      renderConical(els.hourMask);
-      renderConical(els.minuteMask);
-      renderMarkers();
-      animate();
-    };
-  })();
+  if (my.minutesLast === minutes) return;
 
-  Spring.Digital = (function() {
+  var displayDate = my.options.dayNames[date.getDay()] + ', ' + my.options.monthNames[date.getMonth()] + ' ' + date.getDate();
+  var displayHours = (hours % 12 == 0 ? 12 : hours % 12).toString();
+  var displayMinutes = minutes >= 10 ? minutes.toString() : '0' + minutes;
 
-    var digital = document.getElementById('digital');
-    var els = {
-      hours: digital.querySelector('.hours'),
-      minutes: digital.querySelector('.minutes'),
-      amPm: digital.querySelector('.am-pm'),
-      date: digital.querySelector('.date')
-    };
+  fastdom.mutate(function() {
+    my.els.date.textContent = displayDate;
+    my.emptyNode(my.els.hours).appendChild(my.renderText(displayHours));
+    my.emptyNode(my.els.minutes).appendChild(my.renderText(displayMinutes));
+    my.els.amPm.textContent = hours > 11 ? 'PM' : 'AM';
+    my.minutesLast = minutes;
+  });
+};
 
-    var timeClasses = ['zero','one','two','three','four','five','six','seven','eight','nine'];
-    var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    var hours, minutes, displayDate, displayHours, displayMinutes, minutesLast, fragment, span, i;
+Spring.Time.prototype.init = function() {
+  var my = this;
+  utils.throttle(function() {
+    my.render(new Date());
+  });
+};
 
-    function emptyNode(node) {
-      while(node.lastChild) {
-        node.removeChild(node.lastChild);
-      }
-      return node;
-    }
-
-    function renderText(word) {
-      fragment = document.createDocumentFragment();
-
-      for(i = 0; i < word.length; i++) {
-        span = document.createElement('span');
-        span.textContent = word[i];
-        span.className = timeClasses[~~word[i]];
-        fragment.appendChild(span);
-      }
-      return fragment;
-    }
-    
-    function render(date) {
-      hours = date.getHours();
-      minutes = date.getMinutes();
-
-      if(minutes == minutesLast) return;
-
-      displayDate = days[date.getDay()] + ', ' + months[date.getMonth()] + ' ' + date.getDate();
-          
-      els.date.textContent = displayDate;
-
-      displayHours = (hours % 12 == 0 ? 12 : hours % 12).toString();
-      displayMinutes = minutes >= 10 ? minutes.toString() : '0' + minutes;
-
-      emptyNode(els.hours).appendChild(renderText(displayHours));
-      emptyNode(els.minutes).appendChild(renderText(displayMinutes));
-
-      els.amPm.textContent = hours > 11 ? 'PM' : 'AM';
-
-      minutesLast = minutes;
-    }
-
-    function init() {
-      render(new Date());
-      requestAnimationFrame(init);
-    }
-
-    return init;
-
-  })();
-
-  Spring.debug = getParameterByName('debug');
-
-  Spring.Unsplash();
-  Spring.Watch();
-  Spring.Digital();
-
-})(window, document, window.anime);
+var spring = window.spring = new Spring(utils.debug);
