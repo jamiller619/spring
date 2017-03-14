@@ -1,5 +1,5 @@
 *.sublime-project
 *.sublime-workspace
 *node_modules
-*assets/bower
+*bower
 *dist

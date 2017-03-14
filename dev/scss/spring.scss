@@ -1,0 +1,140 @@
+@import "../bower/reset-scss/reset";
+
+$black: #161515;
+$ease: cubic-bezier(.74,.15,.04,.96);
+
+body {
+  font-size: 16px;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotateZ(0deg);
+  }
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes scale {
+  from {
+    transform: scale(0);
+  }
+}
+
+#background {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%;
+  opacity: 1;
+  animation: appear .5s .1s backwards;
+}
+
+#analog {
+  margin: 10px;
+  z-index: 2;
+  transform: scale(1);
+  animation: scale .4s .2s backwards $ease;
+
+  .dial,
+  .face,
+  .hours,
+  .hours::before,
+  .minutes,
+  .minutes-group {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+  }
+
+  .dial {
+    transform: scale(.5);
+    border-radius: 50%;
+    background-color: $black;
+    z-index: 2;
+  }
+
+  .face {
+    background: url(images/markers.png) no-repeat 50%;
+    background-size: contain;
+  }
+
+  .hours,
+  .minutes {
+    mix-blend-mode: multiply;
+  }
+
+  .hours::before,
+  .minutes-group {
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: currentColor;
+    -webkit-mask-image: url(images/clock-hand.png);
+    -webkit-mask-size: 100%;
+  }
+
+  .hours::before {
+    content: '';
+    display: block;
+    animation: rotate 43200s linear infinite;
+  }
+
+  .minutes-group {
+    animation: rotate 3600s linear infinite;
+  }
+
+  .minute-hand {
+    position: absolute;
+    right: 0;
+    left: 0;
+    height: 50%;
+    width: 3%;
+    margin: 0 auto;
+    background-color: currentColor;
+  }
+}
+
+#digital {
+  margin: 10px;
+  //font-weight: lighter;
+  //font-family: Helvetica, Arial, sans-serif;
+  font-family: system-ui;
+  //font-kerning: normal;
+  font-weight: 200;
+  color: white;
+  text-shadow: 1px 1px 2px $black;
+  font-size: 65px;
+  animation: appear .5s .5s backwards;
+  opacity: .7;
+  z-index: 2;
+}
+
+.date {
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  text-align: right;
+}
+
+.time {
+  font-size: 5rem;
+}

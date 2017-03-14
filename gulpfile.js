@@ -11,7 +11,7 @@ var gulp = require('gulp'),
   htmlmin = require('gulp-htmlmin'),
   inlinesource = require('gulp-inline-source');
 
-var sassDirectory = 'assets/scss/**/*.scss';
+var sassDirectory = 'dev/scss/**/*.scss';
 
 gulp.task('clean', function() {
   return del.sync('dist');
@@ -20,7 +20,7 @@ gulp.task('clean', function() {
 gulp.task('browser-sync', function() {
   browserSync.init({
     server: {
-      baseDir: './'
+      baseDir: './dev'
     },
     ghostMode: false,
     notify: false
@@ -31,12 +31,12 @@ gulp.task('build-css', function () {
   return gulp.src(sassDirectory)
     .pipe(sass().on('error', sass.logError))
     .pipe(cssnano())
-    .pipe(gulp.dest('dist/assets'))
+    .pipe(gulp.dest('dev'))
     .pipe(browserSync.stream());
 });
 
 gulp.task('build-js', function() {
-  return gulp.src('index.html')
+  return gulp.src('dev/index.html')
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
     .pipe(gulp.dest('dist'));
@@ -64,22 +64,24 @@ gulp.task('build-html', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('move-images', function() {
-  gulp.src('assets/images/*')
-    .pipe(gulp.dest('dist'));
+gulp.task('build-images', function() {
+  return gulp.src('dev/images/*')
+    .pipe(gulp.dest('dist/images'));  
 });
 
 gulp.task('build', function(callback) {
-  runSequence('clean', 'build-css', 'build-js', 
-    ['move-images', 'build-html', 'bump-version'],
-    'clean-build', 
+  runSequence('clean', 'build-css', 'build-js', 'build-html', 
+    ['build-images', 'bump-version'],
+    'clean-build',
     callback
   );
 });
 
 gulp.task('default', ['browser-sync', 'build-css'], function() {
   gulp.watch(sassDirectory, ['build-css']);
-  // Reloads the browser whenever HTML or JS files change
-  gulp.watch('*.html', browserSync.reload); 
-  gulp.watch('assets/js/**/*.js', browserSync.reload); 
+  gulp.watch('dev/*.html', browserSync.reload); 
+  gulp.watch('dev/images/*', function() {
+    runSequence('build-images', browserSync.reload);
+  });
+  gulp.watch('dev/js/**/*.js', browserSync.reload); 
 });
