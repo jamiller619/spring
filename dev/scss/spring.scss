@@ -2,6 +2,7 @@
 
 $black: #161515;
 $ease: cubic-bezier(.74,.15,.04,.96);
+$ease-bounce: cubic-bezier(.25, .46, .18, 1.3);
 
 body {
   font-size: 16px;
@@ -34,6 +35,15 @@ body {
   }
 }
 
+@keyframes dial {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(.5);
+  }
+}
+
 .background {
   position: absolute;
   top: 0;
@@ -53,7 +63,7 @@ body {
   margin: 10px;
   z-index: 2;
   transform: scale(1);
-  animation: scale .4s .2s backwards $ease;
+  animation: scale .5s .1s backwards $ease-bounce;
 
   .dial,
   .face,
@@ -69,10 +79,15 @@ body {
   }
 
   .dial {
-    transform: scale(.5);
     border-radius: 50%;
     background-color: $black;
     z-index: 2;
+    animation: dial .5s .1s both $ease-bounce;
+  }
+
+  .face {
+    opacity: 1;
+    animation: appear .5s .6s backwards;
   }
 
   .marker {
@@ -104,11 +119,11 @@ body {
   .hours::before {
     content: '';
     display: block;
-    animation: rotate 43200s .2s linear infinite;
+    animation: rotate 43200s linear infinite;
   }
 
   .minutes-group {
-    animation: rotate 3600s .2s linear infinite;
+    animation: rotate 3600s linear infinite;
   }
 
   .minute-hand {
@@ -129,7 +144,7 @@ body {
   color: white;
   text-shadow: 1px 1px 2px $black;
   font-size: 65px;
-  animation: appear .5s .5s backwards;
+  animation: appear .5s .6s backwards;
   opacity: .8;
   z-index: 2;
 }

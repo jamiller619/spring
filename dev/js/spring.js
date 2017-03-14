@@ -111,7 +111,18 @@ Spring.Time = function(startDate) {
     time: container.querySelector('.time'),
     date: container.querySelector('.date')
   };
-  this.init(startDate);
+  this.start = startDate;
+  this.init();
+};
+
+Spring.Time.prototype.init = function() {
+  var my = this, d;
+  var step = function(time) {
+    d = new Date(Date.parse(my.start) + time);
+    my.render(d);
+    window.requestAnimationFrame(step);
+  };
+  window.requestAnimationFrame(step);
 };
 
 Spring.Time.prototype.options = {
@@ -134,15 +145,6 @@ Spring.Time.prototype.render = function(date) {
   my.els.date.textContent = displayDate;
   my.els.time.textContent = displayHours + ':' + displayMinutes + ' ' + ampm;
   my.minutesLast = minutes;
-};
-
-Spring.Time.prototype.init = function(startDate) {
-  var my = this;
-  var step = function() {
-    my.render(startDate || new Date());
-    window.requestAnimationFrame(step);
-  };
-  window.requestAnimationFrame(step);
 };
 
 var options = window.options = (function() {
