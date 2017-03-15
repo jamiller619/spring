@@ -30,7 +30,9 @@ gulp.task('browser-sync', function() {
 gulp.task('build-css', function () {
   return gulp.src(sassDirectory)
     .pipe(sass().on('error', sass.logError))
-    .pipe(cssnano())
+    .pipe(cssnano({
+      zindex: false
+    }))
     .pipe(gulp.dest('dev'))
     .pipe(browserSync.stream());
 });

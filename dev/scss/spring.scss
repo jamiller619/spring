@@ -61,7 +61,7 @@ body {
 
 .analog {
   margin: 10px;
-  z-index: 2;
+  z-index: 1;
   transform: scale(1);
   animation: scale .5s .1s backwards $ease-bounce;
 
@@ -78,10 +78,14 @@ body {
     transform-origin: center;
   }
 
+  .dial,
+  .face {
+    z-index: 1;
+  }
+
   .dial {
     border-radius: 50%;
     background-color: $black;
-    z-index: 2;
     animation: dial .5s .1s both $ease-bounce;
   }
 
@@ -103,7 +107,6 @@ body {
 
   .hours,
   .minutes {
-    mix-blend-mode: multiply;
     transition: transform 1s $ease;
   }
 
@@ -116,13 +119,18 @@ body {
     -webkit-mask-size: 100%;
   }
 
-  .hours::before {
-    content: '';
-    display: block;
-    animation: rotate 43200s linear infinite;
+  .hours {
+    mix-blend-mode: multiply;
+    &::before {
+      content: '';
+      display: block;
+      //animation: rotate 43.2s linear infinite;
+      animation: rotate 43200s linear infinite;
+    }
   }
 
   .minutes-group {
+    //animation: rotate 3.6s linear infinite;
     animation: rotate 3600s linear infinite;
   }
 
@@ -146,7 +154,7 @@ body {
   font-size: 65px;
   animation: appear .5s .6s backwards;
   opacity: .8;
-  z-index: 2;
+  z-index: 1;
 }
 
 .date,

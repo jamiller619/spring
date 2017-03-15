@@ -1,33 +1,51 @@
 var Spring = window.Spring = function() {
-  
-  var body = document.body;
-  this.background = new Spring.Unsplash(body);
-  this.clock = new Spring.Clock({
+  var my = this, body = document.body;
+  my.unsplash = new Spring.Unsplash({
+    container: body,
+    daily: my.options.unsplashDaily
+  });
+  my.time = new Spring.Time(my.options.startDate);
+  my.clock = new Spring.Clock({
     className: 'analog',
     size: 33,
     sizeUnits: 'vh',
     appendTo: body,
-    startDate: options.startDate,
+    startDate: my.options.startDate,
     colors: {
       minuteFace: '#f12177',
       hourFace: '#ad00e9',
       minuteHand: '#9bbfff'
     }
   });
-  this.time = new Spring.Time(options.startDate);
 };
 
-Spring.Unsplash = function(container) {
+Spring.prototype.options = (function() {
+  var startDate = new Date(), unsplashDaily = true, time, urlParams;
+  if (window.URLSearchParams) {
+    urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('t')) {
+      time = urlParams.get('t').split(':');
+      startDate.setHours(+time[0], +time[1]);
+    }
+    if (urlParams.get('daily') === 'false') daily = false;
+  }
+  return {
+    startDate: startDate,
+    unsplashDaily: unsplashDaily
+  };
+})();
+
+Spring.Unsplash = function(options) {
   var background = document.createElement('div');
   var bgUrl = 'https://source.unsplash.com/featured/' + window.innerWidth + 'x' + window.innerHeight;
   var bgImage = new Image();
 
-  if (options.unsplash.daily) bgUrl += '/daily';
+  if (options.daily) bgUrl += '/daily';
   background.className = 'background';
 
   bgImage.onload = function() {
     background.style.backgroundImage = 'url(' + bgUrl + ')';
-    container.appendChild(background);
+    options.container.appendChild(background);
   };
 
   bgImage.src = bgUrl;
@@ -40,17 +58,18 @@ Spring.Clock = function(options) {
 
 Spring.Clock.prototype.render = function() {
   
-  this.container = document.createElement('div');
+  var my = this;
+  my.container = document.createElement('div');
   var minutes = document.createElement('div');
   var minuteHand = document.createElement('div');
   var minutesGroup = document.createElement('div');
   var hours = document.createElement('div');
   var dial = document.createElement('div');
   var face = document.createElement('div');
-  var degrees = this.getDegrees(this.options.startDate || new Date());
+  var degrees = my.getDegrees(my.options.startDate || new Date());
 
-  this.container.className = this.options.className;
-  this.container.style.width = this.container.style.height = this.options.size + this.options.sizeUnits;
+  my.container.className = my.options.className;
+  my.container.style.width = my.container.style.height = my.options.size + my.options.sizeUnits;
   minutes.className = 'minutes';
   minuteHand.className = 'minute-hand';
   minutesGroup.className = 'minutes-group';
@@ -61,21 +80,21 @@ Spring.Clock.prototype.render = function() {
   minutes.style.transform = 'rotate(' + (degrees.minute - 180) + 'deg)';
   hours.style.transform = 'rotate(' + (degrees.hour - 180) + 'deg)';
 
-  minutes.style.color = this.options.colors.minuteFace;
-  minuteHand.style.color = this.options.colors.minuteHand;
+  minutes.style.color = my.options.colors.minuteFace;
+  minuteHand.style.color = my.options.colors.minuteHand;
 
-  hours.style.color = this.options.colors.hourFace;
+  hours.style.color = my.options.colors.hourFace;
 
   minutesGroup.appendChild(minuteHand);
   minutes.appendChild(minutesGroup);
-  face.appendChild(this.createMarkers());
+  face.appendChild(my.createMarkers());
 
-  this.container.appendChild(face);
-  this.container.appendChild(dial);
-  this.container.appendChild(hours);
-  this.container.appendChild(minutes);
+  my.container.appendChild(face);
+  my.container.appendChild(dial);
+  my.container.appendChild(hours);
+  my.container.appendChild(minutes);
 
-  this.options.appendTo.appendChild(this.container);
+  my.options.appendTo.appendChild(my.container);
 
   window.setTimeout(function() {
     minutes.style.transform = 'rotate(' + degrees.minute + 'deg)';
@@ -105,14 +124,14 @@ Spring.Clock.prototype.getDegrees = function(date) {
 };
 
 Spring.Time = function(startDate) {
-  var container = document.getElementById('digital');
-  this.els = {
+  var my = this, container = document.getElementById('digital');
+  my.els = {
     container: container,
     time: container.querySelector('.time'),
     date: container.querySelector('.date')
   };
-  this.start = startDate;
-  this.init();
+  my.start = startDate;
+  my.init();
 };
 
 Spring.Time.prototype.init = function() {
@@ -146,17 +165,5 @@ Spring.Time.prototype.render = function(date) {
   my.els.time.textContent = displayHours + ':' + displayMinutes + ' ' + ampm;
   my.minutesLast = minutes;
 };
-
-var options = window.options = (function() {
-  var urlParams = new URLSearchParams(window.location.search);
-  var time = urlParams.has('t') ? urlParams.get('t').split(':') : false;
-  var date = new Date();
-  return {
-    startDate: time ? new Date(date.getFullYear(), date.getMonth(), date.getDate(), time[0], time[1]) : date,
-    unsplash: {
-      daily: urlParams.get('daily') === 'false' ? false : true
-    }
-  };
-})();
 
 var spring = window.spring = new Spring();
