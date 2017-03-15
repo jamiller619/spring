@@ -111,6 +111,7 @@ body {
   .hours,
   .minutes {
     transition: transform 1s $ease;
+    mix-blend-mode: multiply;
   }
 
   .hours::before,
@@ -123,18 +124,34 @@ body {
   }
 
   .hours {
-    mix-blend-mode: multiply;
+    //mix-blend-mode: multiply;
     &::before {
       content: '';
       display: block;
-      //animation: rotate 43.2s linear infinite;
       animation: rotate 43200s linear infinite;
     }
   }
 
   .minutes-group {
-    //animation: rotate 3.6s linear infinite;
     animation: rotate 3600s linear infinite;
+  }
+
+  &.speed-10 {
+    .hours::before {
+      animation-duration: 432s;
+    }
+    .minutes-group {
+      animation-duration: 36s;
+    }
+  }
+
+  &.speed-100 {
+    .hours::before {
+      animation-duration: 43.2s;
+    }
+    .minutes-group {
+      animation-duration: 3.6s;
+    }
   }
 
   .minute-hand {

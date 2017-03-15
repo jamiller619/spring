@@ -11,6 +11,7 @@ var Spring = window.Spring = function() {
     sizeUnits: 'vmin',
     appendTo: body,
     startDate: my.options.startDate,
+    speed: my.options.clockSpeed,
     colors: {
       minuteFace: '#f12177',
       hourFace: '#ad00e9',
@@ -20,18 +21,20 @@ var Spring = window.Spring = function() {
 };
 
 Spring.prototype.options = (function() {
-  var startDate = new Date(), unsplashDaily = true, time, urlParams;
+  var startDate = new Date(), clockSpeed = 1, unsplashDaily = true, time, urlParams;
   if (window.URLSearchParams) {
     urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('t')) {
       time = urlParams.get('t').split(':');
       startDate.setHours(+time[0], +time[1]);
     }
-    if (urlParams.get('daily') === 'false') unsplashDaily = false;
+    if (urlParams.get('d') === 'false') unsplashDaily = false;
+    if (urlParams.has('s')) clockSpeed = +urlParams.get('s');
   }
   return {
     startDate: startDate,
-    unsplashDaily: unsplashDaily
+    unsplashDaily: unsplashDaily,
+    clockSpeed: clockSpeed
   };
 })();
 
@@ -57,7 +60,6 @@ Spring.Clock = function(options) {
 };
 
 Spring.Clock.prototype.render = function() {
-  
   var my = this;
   my.container = document.createElement('div');
   var minutes = document.createElement('div');
@@ -68,7 +70,7 @@ Spring.Clock.prototype.render = function() {
   var face = document.createElement('div');
   var degrees = my.getDegrees(my.options.startDate || new Date());
 
-  my.container.className = my.options.className;
+  my.container.className = my.options.className + ' speed-' + my.options.speed;
   my.container.style.width = my.container.style.height = my.options.size + my.options.sizeUnits;
   minutes.className = 'minutes';
   minuteHand.className = 'minute-hand';
@@ -81,7 +83,7 @@ Spring.Clock.prototype.render = function() {
   hours.style.transform = 'rotate(' + (degrees.hour - 180) + 'deg)';
 
   minutes.style.color = my.options.colors.minuteFace;
-  minuteHand.style.color = my.options.colors.minuteHand;
+  minuteHand.style.color = my.options.colors.minuteFace;
 
   hours.style.color = my.options.colors.hourFace;
 

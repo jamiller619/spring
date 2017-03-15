@@ -22,8 +22,7 @@ gulp.task('browser-sync', function() {
     server: {
       baseDir: './dev'
     },
-    ghostMode: false,
-    notify: false
+    ghostMode: false
   });
 });
 
@@ -67,8 +66,8 @@ gulp.task('build-html', function() {
 });
 
 gulp.task('build-images', function() {
-  return gulp.src('dev/images/*')
-    .pipe(gulp.dest('dist/images'));  
+  /*return gulp.src('dev/images/*')
+    .pipe(gulp.dest('dist/images'));*/
 });
 
 gulp.task('build', function(callback) {
