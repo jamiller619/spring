@@ -8,7 +8,7 @@ var Spring = window.Spring = function() {
   my.clock = new Spring.Clock({
     className: 'analog',
     size: 33,
-    sizeUnits: 'vh',
+    sizeUnits: 'vmin',
     appendTo: body,
     startDate: my.options.startDate,
     colors: {
@@ -27,7 +27,7 @@ Spring.prototype.options = (function() {
       time = urlParams.get('t').split(':');
       startDate.setHours(+time[0], +time[1]);
     }
-    if (urlParams.get('daily') === 'false') daily = false;
+    if (urlParams.get('daily') === 'false') unsplashDaily = false;
   }
   return {
     startDate: startDate,
