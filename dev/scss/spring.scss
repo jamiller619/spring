@@ -70,11 +70,7 @@ body {
 
   .dial,
   .face,
-  .marker,
-  .hours,
-  .hours::before,
-  .minutes,
-  .minutes-group {
+  .marker {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -108,60 +104,66 @@ body {
     background-color: $black;
   }
 
-  .hours,
-  .minutes {
+  .minutes-container,
+  .minute-hand-container,
+  .hours-container {
+    width: 100%;
+    height: 100%;
     transition: transform 1s $ease;
+  }
+
+  .minutes-container {
     mix-blend-mode: multiply;
   }
 
-  .hours::before,
-  .minutes-group {
-    border-radius: 50%;
-    overflow: hidden;
-    background-color: currentColor;
-    -webkit-mask-image: url(images/clock-hand.png);
-    -webkit-mask-size: 100%;
-  }
-
   .hours {
-    //mix-blend-mode: multiply;
-    &::before {
-      content: '';
-      display: block;
-      animation: rotate 43200s linear infinite;
-    }
+    animation: rotate 43200s linear infinite;
   }
-
-  .minutes-group {
+  .minutes,
+  .minute-hand {
     animation: rotate 3600s linear infinite;
   }
+  .hours,
+  .minutes {
+    width: 100%;
+    height: 100%;
+    -webkit-mask-image: url(images/clock-hand.png);
+    -webkit-mask-size: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+  }
 
-  &.speed-10 {
-    .hours::before {
-      animation-duration: 432s;
+  .minutes-container,
+  .minute-hand-container {
+    margin-top: -100%;
+  }
+
+  .minute-hand {
+    width: 4px;
+    height: 50%;
+    margin-left: calc(50% - 2px);
+    transform-origin: bottom;
+    box-shadow: -5px 3px 23px 0 rgba(0,0,0,.2);
+  }
+
+  &.speed-50 {
+    .hours {
+      animation-duration: 86.4s;
     }
-    .minutes-group {
-      animation-duration: 36s;
+    .minutes,
+    .minute-hand {
+      animation-duration: 7.2s;
     }
   }
 
   &.speed-100 {
-    .hours::before {
+    .hours {
       animation-duration: 43.2s;
     }
-    .minutes-group {
+    .minutes,
+    .minute-hand {
       animation-duration: 3.6s;
     }
-  }
-
-  .minute-hand {
-    position: absolute;
-    right: 0;
-    left: 0;
-    height: 50%;
-    width: 3%;
-    margin: 0 auto;
-    background-color: currentColor;
   }
 }
 

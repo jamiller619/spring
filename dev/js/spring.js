@@ -13,9 +13,8 @@ var Spring = window.Spring = function() {
     startDate: my.options.startDate,
     speed: my.options.clockSpeed,
     colors: {
-      minuteFace: '#f12177',
-      hourFace: '#ad00e9',
-      minuteHand: '#9bbfff'
+      minute: '#f12177',
+      hour: '#ad00e9'
     }
   });
 };
@@ -62,9 +61,11 @@ Spring.Clock = function(options) {
 Spring.Clock.prototype.render = function() {
   var my = this;
   my.container = document.createElement('div');
+  var minutesContainer = document.createElement('div');
   var minutes = document.createElement('div');
+  var minuteHandContainer = document.createElement('div');
   var minuteHand = document.createElement('div');
-  var minutesGroup = document.createElement('div');
+  var hoursContainer = document.createElement('div');
   var hours = document.createElement('div');
   var dial = document.createElement('div');
   var face = document.createElement('div');
@@ -74,33 +75,36 @@ Spring.Clock.prototype.render = function() {
   my.container.style.width = my.container.style.height = my.options.size + my.options.sizeUnits;
   minutes.className = 'minutes';
   minuteHand.className = 'minute-hand';
-  minutesGroup.className = 'minutes-group';
   hours.className = 'hours';
+  minutesContainer.className = 'minutes-container';
+  hoursContainer.className = 'hours-container';
+  minuteHandContainer.className = 'minute-hand-container';
   dial.className = 'dial';
   face.className = 'face';
 
-  minutes.style.transform = 'rotate(' + (degrees.minute - 180) + 'deg)';
-  hours.style.transform = 'rotate(' + (degrees.hour - 180) + 'deg)';
+  minutesContainer.style.transform = minuteHandContainer.style.transform = 'rotate(' + (degrees.minute - 180) + 'deg)';
+  hoursContainer.style.transform = 'rotate(' + (degrees.hour - 180) + 'deg)';
 
-  minutes.style.color = my.options.colors.minuteFace;
-  minuteHand.style.color = my.options.colors.minuteFace;
+  minutes.style.backgroundColor = minuteHand.style.backgroundColor = my.options.colors.minute;
+  hours.style.backgroundColor = my.options.colors.hour;
 
-  hours.style.color = my.options.colors.hourFace;
-
-  minutesGroup.appendChild(minuteHand);
-  minutes.appendChild(minutesGroup);
   face.appendChild(my.createMarkers());
+
+  minutesContainer.appendChild(minutes);
+  minuteHandContainer.appendChild(minuteHand);
+  hoursContainer.appendChild(hours);
 
   my.container.appendChild(face);
   my.container.appendChild(dial);
-  my.container.appendChild(hours);
-  my.container.appendChild(minutes);
+  my.container.appendChild(hoursContainer);
+  my.container.appendChild(minutesContainer);
+  my.container.appendChild(minuteHandContainer);
 
   my.options.appendTo.appendChild(my.container);
 
   window.setTimeout(function() {
-    minutes.style.transform = 'rotate(' + degrees.minute + 'deg)';
-    hours.style.transform = 'rotate(' + degrees.hour + 'deg)';
+    minutesContainer.style.transform = minuteHandContainer.style.transform = 'rotate(' + degrees.minute + 'deg)';
+    hoursContainer.style.transform = 'rotate(' + degrees.hour + 'deg)';
   }, 10);
 };
 
