@@ -2,7 +2,8 @@ var Spring = window.Spring = function() {
   var my = this, body = document.body;
   my.unsplash = new Spring.Unsplash({
     container: body,
-    daily: my.options.unsplashDaily
+    daily: my.options.unsplashDaily,
+    url: my.options.bgUrl
   });
   my.time = new Spring.Time(my.options.startDate);
   my.clock = new Spring.Clock({
@@ -20,7 +21,7 @@ var Spring = window.Spring = function() {
 };
 
 Spring.prototype.options = (function() {
-  var startDate = new Date(), clockSpeed = 1, unsplashDaily = true, time, urlParams;
+  var startDate = new Date(), clockSpeed = 1, unsplashDaily = true, bgUrl, time, urlParams;
   if (window.URLSearchParams) {
     urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('t')) {
@@ -29,20 +30,22 @@ Spring.prototype.options = (function() {
     }
     if (urlParams.get('d') === 'false') unsplashDaily = false;
     if (urlParams.has('s')) clockSpeed = +urlParams.get('s');
+    if (urlParams.has('u')) bgUrl = urlParams.get('u');
   }
   return {
     startDate: startDate,
     unsplashDaily: unsplashDaily,
-    clockSpeed: clockSpeed
+    clockSpeed: clockSpeed,
+    bgUrl: bgUrl
   };
 })();
 
 Spring.Unsplash = function(options) {
   var background = document.createElement('div');
-  var bgUrl = 'https://source.unsplash.com/featured/' + window.innerWidth + 'x' + window.innerHeight;
+  var bgUrl = options.url || 'https://source.unsplash.com/featured/' + window.innerWidth + 'x' + window.innerHeight;
   var bgImage = new Image();
 
-  if (options.daily) bgUrl += '/daily';
+  if (options.daily && !options.url) bgUrl += '/daily';
   background.className = 'background';
 
   bgImage.onload = function() {
