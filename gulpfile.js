@@ -9,7 +9,8 @@ var gulp = require('gulp'),
   del = require('del'),
   bump = require('gulp-bump'),
   htmlmin = require('gulp-htmlmin'),
-  inlinesource = require('gulp-inline-source');
+  inlinesource = require('gulp-inline-source'),
+  imagemin = require('gulp-imagemin');
 
 var sassDirectory = 'dev/scss/**/*.scss';
 
@@ -66,8 +67,9 @@ gulp.task('build-html', function() {
 });
 
 gulp.task('build-images', function() {
-  /*return gulp.src('dev/images/*')
-    .pipe(gulp.dest('dist/images'));*/
+  return gulp.src('dev/images/*')
+    .pipe(imagemin())
+    .pipe(gulp.dest('dist/images'));
 });
 
 gulp.task('build', function(callback) {
