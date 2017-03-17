@@ -1,111 +1,30 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-us">
   <head>
     <meta charset="UTF-8">
     <title>Spring - A minimal new tab page for Google Chrome</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="images/icon.png">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css" media="screen">
+    <link rel="import" href="bower_components/components.spring.clock/spring-clock.html">
   </head>
-  <body class="loaded">
-    <main>
-      <h1 class="logo">Spring</h1>
+  <body>
+    <main class="main">
+      <h1><img class="logo" alt="Spring" src="images/spring-logo.svg" /></h1>
       <h2>A minimal new tab page for Google Chrome</h2>
-      <h3><a href="https://chrome.google.com/webstore/detail/spring/lcomlokgcbklomfecjjpjlncapnhepbl?hl=en-US">Install on the Chrome Web Store</a></h3>
-      <p>Featuring:</p>
-      <ul>
-        <li>Full size background images from Unsplash, updated daily and tailored to the resolution of your monitor</li>
-        <li>A watch design that contains two semi-transparent rotating discs of color - Inspired by Ziiiro</li>
-        <li>A Meticulously hand-kerned time display</li>
-        <li><a href="https://github.com/jamiller619/spring">Open source and available on Github</a></li>
-      </ul>
+      <a class="btn" href="https://chrome.google.com/webstore/detail/spring/lcomlokgcbklomfecjjpjlncapnhepbl?hl=en-US">Get Spring for Chrome</a>
+      <p>A new tab page that knows its place in the world and won’t get in your way.</p>
+      <p>Featuring a beautiful clock design inspired by <a href="http://www.ziiiro.com/">Ziiiro</a> and full-screen photos from <a href="http://www.unsplash.com">Unsplash</a>.</p>
+      <div class="footer"><a href="http://www.designbypaperjam.com">A project by <img alt="paperjam" src="images/paperjam-logo.svg" /></a></div>
+      <div class="bg-container">
+        <div class="background"></div>
+      </div>
     </main>
-    <div id="macbook">
-      <div id="screenshot">
-        <div id="spring-app">
-          <div id="digital">
-            <p class="time">
-              <span class="hours"></span>
-              <span class="colon">:</span>
-              <span class="minutes"></span>
-              <span class="am-pm"></span>
-            </p>
-            <p class="date"></p>
-          </div>
-          <svg id="watch" data-color-minute="" data-color-hour="">
-            <defs>
-              <filter id="drop-shadow">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
-                <feOffset dx="3" dy="3" result="offsetBlur" />
-                <feFlood flood-opacity="0.8" />
-                <feComposite operator="in" in2="offsetBlur" />
-                <feMerge>
-                  <feMergeNode />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              
-              <linearGradient id="center-fill" x1="1" x2="0" y1="1" y2="0">
-                <stop offset="0%" stop-color="#0c0c0c" />
-                <stop offset="100%" stop-color="#1b1b1b" />
-              </linearGradient>
-
-              <filter id="inset-shadow" x="-50%" y="-50%" width="200%" height="200%">
-                <feComponentTransfer in="SourceAlpha">
-                  <feFuncA type="table" tableValues="1 0" />
-                </feComponentTransfer>
-                <feGaussianBlur stdDeviation="30" />
-                <feOffset dx="5" dy="5" result="offsetBlur" />
-                <feFlood result="color" />
-                <feComposite in2="offsetBlur" operator="in" />
-                <feComposite in2="SourceAlpha" operator="in" />
-                <feMerge>
-                  <feMergeNode in="SourceGraphic" />
-                  <feMergeNode />
-                </feMerge>
-              </filter>
-
-              <clipPath id="overlay-clip">
-                <rect />
-              </clipPath>
-
-              <mask id="hour-mask">
-                <g>
-                  <rect class="angle-rect" />
-                  <g class="mask-a"></g>
-                  <g class="mask-b" clip-path="url(#overlay-clip)"></g>
-                </g>
-              </mask>
-
-              <mask id="minute-mask">
-                <g>
-                  <rect class="angle-rect" />
-                  <g class="mask-a"></g>
-                  <g class="mask-b" clip-path="url(#overlay-clip)"></g>
-                </g>
-              </mask>
-
-            </defs>
-
-            <g class="main">
-              <circle id="watch-shadow" filter="url(#drop-shadow)" />
-              <circle id="hour" class="conical" mask="url(#hour-mask)" filter="url(#inset-shadow)" />
-              <g class="minute-group">
-                <circle id="minute" class="conical" mask="url(#minute-mask)" />
-                <rect id="minute-hand" />
-              </g>
-              <!--<circle id="center" fill="url(#center-fill)" />-->
-              <circle class="center" filter="url(#drop-shadow)" />
-              <circle class="center" fill="url(#center-fill)" />
-              <g id="markers"></g>
-            </g>
-          </svg>
-        </div>
+    <div class="demo">
+      <div class="chrome">
+        <spring-clock data-size="25"></spring-clock>
+        <div class="background"></div>
       </div>
     </div>
-    <a id="dxby-paperjam" href="http://www.designbypaperjam.com"></a>
-    <script src="js/anime.js"></script>
-    <script src="js/spring.app.js"></script>
   </body>
 </html>

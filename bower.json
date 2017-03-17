@@ -1,0 +1,20 @@
+{
+  "name": "spring.ghpage",
+  "description": "Github page for Spring",
+  "main": "index.js",
+  "authors": [
+    "Jeff Miller"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "components.spring.clock": "https://github.com/jamiller619/components.spring.clock.git"
+  }
+}
