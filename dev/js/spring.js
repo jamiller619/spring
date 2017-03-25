@@ -14,8 +14,8 @@ var Spring = window.Spring = function() {
     startDate: my.options.startDate,
     speed: my.options.clockSpeed,
     colors: {
-      minute: '#f12177',
-      hour: '#ad00e9'
+      minute: '#de54a5',
+      hour: '#bb54de'
     }
   });
 };
