@@ -1,0 +1,20 @@
+{
+  "name": "spring",
+  "description": "A minimal new tab page for Google Chrome",
+  "main": "index.js",
+  "authors": [
+    "Jeff Miller"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "uiGradients": "https://github.com/ghosh/uiGradients.git"
+  }
+}

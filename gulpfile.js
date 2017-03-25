@@ -45,7 +45,7 @@ gulp.task('build-js', function() {
 });
 
 gulp.task('bump-version', function() {
-  gulp.src('manifest.json')
+  gulp.src('dev/manifest.json')
     .pipe(bump({ type: 'minor' }))
     .pipe(gulp.dest('dist'));
 });

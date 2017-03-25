@@ -6,6 +6,24 @@ var Spring = window.Spring = function() {
     url: my.options.bgUrl
   });
   my.time = new Spring.Time(my.options.startDate);
+  my.colorSchemes = {
+    default: {
+      minute: 'hsla(325,67%,60%,1)',
+      hour:   'hsla(285,67%,60%,1)'
+    },
+    classic: {
+      minute: 'hsla(210,67%,60%,1)',
+      hour:   'hsla(0,67%,60%,1)'
+    },
+    aqua: {
+      minute: 'hsla(140,67%,60%,1)',
+      hour:   'hsla(200,67%,60%,1)'
+    },
+    'rose-gold': {
+      minute: 'hsla(0,67%,70%,1)',
+      hour:   'hsla(30,67%,60%,1)'
+    }
+  };
   my.clock = new Spring.Clock({
     className: 'analog',
     size: 33,
@@ -13,15 +31,12 @@ var Spring = window.Spring = function() {
     appendTo: body,
     startDate: my.options.startDate,
     speed: my.options.clockSpeed,
-    colors: {
-      minute: '#f12177',
-      hour: '#ad00e9'
-    }
+    colors: my.colorSchemes[my.options.colorScheme]
   });
 };
 
 Spring.prototype.options = (function() {
-  var startDate = new Date(), clockSpeed = 1, unsplashDaily = true, bgUrl, time, urlParams;
+  var startDate = new Date(), clockSpeed = 1, unsplashDaily = true, colorScheme = 'default', bgUrl, time, urlParams;
   if (window.URLSearchParams) {
     urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('t')) {
@@ -31,12 +46,14 @@ Spring.prototype.options = (function() {
     if (urlParams.get('d') === 'false') unsplashDaily = false;
     if (urlParams.has('s')) clockSpeed = +urlParams.get('s');
     if (urlParams.has('u')) bgUrl = urlParams.get('u');
+    if (urlParams.has('c')) colorScheme = urlParams.get('c');
   }
   return {
     startDate: startDate,
     unsplashDaily: unsplashDaily,
     clockSpeed: clockSpeed,
-    bgUrl: bgUrl
+    bgUrl: bgUrl,
+    colorScheme: colorScheme
   };
 })();
 
