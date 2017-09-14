@@ -3,7 +3,7 @@ const gulp = require('gulp'),
   browserSync = require('browser-sync'),
   useref = require('gulp-useref'),
   gulpIf = require('gulp-if'),
-  uglify = require('gulp-uglify'),
+  minify = require('gulp-babel-minify'),
   cssnano = require('gulp-cssnano'),
   runSequence = require('run-sequence'),
   del = require('del'),
@@ -40,7 +40,7 @@ gulp.task('build-css', () => {
 gulp.task('build-js', () => {
   return gulp.src('dev/index.html')
     .pipe(useref())
-    .pipe(gulpIf('*.js', uglify()))
+    .pipe(gulpIf('*.js', minify()))
     .pipe(gulp.dest('dist'));
 });
 
