@@ -1,20 +1,26 @@
+
+
 class Options {
+  
   constructor() {
-    this.urlParams = undefined
+    this.urlParams = {}
     if (window.URLSearchParams) {
       this.urlParams = new URLSearchParams(window.location.search)
     }
   }
-  get unsplashDaily() {
-    return this.urlParams.has('d') ? this.urlParams.get('d') === 'true' : false
+  get backgroundImageUpdateFrequency() {
+    let frequency = 'daily'
+    if (this.urlParams.has('bu')) {
+      frequency = this.urlParams.get('bu') === 'every'
+        ? ''
+        : 'weekly'
+    }
+    return frequency
   }
-  get clockSpeed() {
-    return this.urlParams.has('s') ? +this.urlParams.get('s') : undefined
+  get backgroundImageCustomURL() {
+    return this.urlParams.has('bc') ? this.urlParams.get('bc') : undefined
   }
-  get backgroundUrl() {
-    return this.urlParams.has('u') ? this.urlParams.get('u') : undefined
-  }
-  get startDate() {
+  get startDateTime() {
     const date = new Date()
     if (this.urlParams.has('t')) {
       time = this.urlParams.get('t').split(':')
@@ -24,34 +30,37 @@ class Options {
   }
 }
 
-class Unsplash {
-  constructor(container, daily, url) {
-    this.container = container
-    this.daily = daily
-    this.url = url
+class BackgroundImage {
+  constructor(updateFrequency, customUrl) {
+    this.updateFrequency = updateFrequency
+    this.url = customUrl || `https://source.unsplash.com/featured/${ window.innerWidth }x${ window.innerHeight }/${ this.updateFrequency }`
   }
   render() {
-    const background = document.createElement('div');
-    let bgUrl = this.url || `https://source.unsplash.com/featured/${window.innerWidth}x${window.innerHeight}`;
-    var bgImage = new Image();
+    const container = document.createElement('div')
+    let image = new Image()
 
-    if (this.daily && !this.url) bgUrl += '/daily';
-    background.className = 'background';
+    container.className = 'background'
 
-    bgImage.onload = function() {
-      background.style.backgroundImage = `url(${bgUrl})`;
-      this.container.appendChild(background);
-    };
+    image.onload = () => {
+      container.style.backgroundImage = `url(${ this.url })`
+    }
 
-    bgImage.src = bgUrl;
+    image.src = this.url
+
+    return container
   }
 }
 
 class Clock {
-  constructor(size, sizeUnits) {
+  constructor({ startDate, size, sizeUnits, minuteColor, hourColor }) {
     this.container = document.createElement('div');
     this.size = size
     this.sizeUnits = sizeUnits
+    this.startDate = startDate
+    this.colors = {
+      minute: minuteColor,
+      hour: hourColor
+    }
   }
   getDegrees(date) {
     var d = date || new Date();
@@ -70,93 +79,126 @@ class Clock {
       el.style.transform = `rotate(${i * 360 / 12}deg) translate(${(this.size / 2 * .75) + this.sizeUnits})`;
       markers.appendChild(el);
     })
+    return markers
+  }
+  renderTime(time) {
+    const degrees = this.getDegrees(time)
+    this.minutesContainer.style.transform = this.minuteHandContainer.style.transform = `rotate(${ degrees.minute }deg)`
+    this.hoursContainer.style.transform = `rotate(${ degrees.hour }deg)`
   }
   render() {
-    var minutesContainer = document.createElement('div');
-    var minutes = document.createElement('div');
-    var minuteHandContainer = document.createElement('div');
-    var minuteHand = document.createElement('div');
-    var hoursContainer = document.createElement('div');
-    var hours = document.createElement('div');
-    var dial = document.createElement('div');
-    var face = document.createElement('div');
-    var degrees = this.getDegrees(this.startDate || new Date());
+    const minutesContainer = document.createElement('div')
+    const minutes = document.createElement('div')
+    const minuteHandContainer = document.createElement('div')
+    const minuteHand = document.createElement('div')
+    const hoursContainer = document.createElement('div')
+    const hours = document.createElement('div')
+    const dial = document.createElement('div')
+    const face = document.createElement('div')
 
-    this.container.className = `${ this.options.className } speed-${ this.options.speed }`;
-    this.container.style.width = this.container.style.height = this.options.size + this.options.sizeUnits;
-    minutes.className = 'minutes';
-    minuteHand.className = 'minute-hand';
-    hours.className = 'hours';
-    minutesContainer.className = 'minutes-container';
-    hoursContainer.className = 'hours-container';
-    minuteHandContainer.className = 'minute-hand-container';
-    dial.className = 'dial';
-    face.className = 'face';
+    this.container.className = 'analog'
+    this.container.style.width = this.container.style.height = this.size + this.sizeUnits
+    minutes.className = 'minutes'
+    minuteHand.className = 'minute-hand'
+    hours.className = 'hours'
+    minutesContainer.className = 'minutes-container'
+    hoursContainer.className = 'hours-container'
+    minuteHandContainer.className = 'minute-hand-container'
+    dial.className = 'dial'
+    face.className = 'face'
 
-    minutesContainer.style.transform = minuteHandContainer.style.transform = `rotate(${ degrees.minute - 180 }deg)`;
-    hoursContainer.style.transform = `rotate(${ degrees.hour - 180 }deg)`;
+    minutes.style.backgroundColor = minuteHand.style.backgroundColor = this.colors.minute
+    hours.style.backgroundColor = this.colors.hour
 
-    minutes.style.backgroundColor = minuteHand.style.backgroundColor = this.options.colors.minute;
-    hours.style.backgroundColor = this.options.colors.hour;
+    face.appendChild(this.createMarkers())
 
-    face.appendChild(this.createMarkers());
+    minutesContainer.appendChild(minutes)
+    minuteHandContainer.appendChild(minuteHand)
+    hoursContainer.appendChild(hours)
 
-    minutesContainer.appendChild(minutes);
-    minuteHandContainer.appendChild(minuteHand);
-    hoursContainer.appendChild(hours);
+    this.container.appendChild(face)
+    this.container.appendChild(dial)
+    this.container.appendChild(hoursContainer)
+    this.container.appendChild(minutesContainer)
+    this.container.appendChild(minuteHandContainer)
 
-    this.container.appendChild(face);
-    this.container.appendChild(dial);
-    this.container.appendChild(hoursContainer);
-    this.container.appendChild(minutesContainer);
-    this.container.appendChild(minuteHandContainer);
-
-    this.options.appendTo.appendChild(this.container);
+    this.minutesContainer = minutesContainer
+    this.minuteHandContainer = minuteHandContainer
+    this.hoursContainer = hoursContainer
 
     const step = () => {
-      minutesContainer.style.transform = minuteHandContainer.style.transform = `rotate(${ degrees.minute }deg)`;
-      hoursContainer.style.transform = `rotate(${ degrees.hour }deg)`;
+      this.renderTime(new Date())
       window.requestAnimationFrame(step)
     }
 
-    window.requestAnimationFrame(step);
+    window.requestAnimationFrame(step)
+
+    return this.container
   }
 }
 
 class Time {
   constructor(startDate) {
-    const container = document.getElementById('digital')
+    this.els = {
+      container: document.createElement('div'),
+      time: document.createElement('span'),
+      date: document.createElement('span')
+    }
+
+    this.els.container.className = 'digital'
+    this.els.time.className = 'time'
+    this.els.date.className = 'date'
+
     this.monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December']
     this.dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
 
-    this.start = startDate;
-    this.els = {
-      container: container,
-      time: container.querySelector('.time'),
-      date: container.querySelector('.date')
-    }
-  }
-  init() {
-    const step = (time) => {
-      const d = new Date(Date.parse(this.start) + time);
-      this.render(d);
-      window.requestAnimationFrame(step);
-    }
-    window.requestAnimationFrame(step);
-  }
-  render(date) {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
+    this.start = startDate
 
-    if (this.minutesLast === minutes) return;
+    this.els.container.appendChild(this.els.time)
+    this.els.container.appendChild(this.els.date)
+  }
+  renderTime(date) {
+    const hours = date.getHours()
+    const minutes = date.getMinutes()
+
+    if (this.minutesLast === minutes) return
 
     const displayDate = `${ this.dayNames[date.getDay()] }, ${ this.monthNames[date.getMonth()] } ${ date.getDate() }`
     const displayHours = (hours % 12 === 0 ? 12 : hours % 12).toString()
-    const displayMinutes = minutes >= 10 ? minutes.toString() : `0 ${ minutes }`
-    const ampm = hours > 11 ? 'PM' : 'AM';
+    const displayMinutes = minutes >= 10 ? minutes.toString() : `0${ minutes }`
+    const ampm = hours > 11 ? 'PM' : 'AM'
 
-    this.els.date.textContent = displayDate;
+    this.els.date.textContent = displayDate
     this.els.time.textContent = `${ displayHours }:${ displayMinutes } ${ ampm }`
-    this.minutesLast = minutes;
+    this.minutesLast = minutes
+  }
+  render() {
+    const step = (time) => {
+      const d = new Date(Date.parse(this.start) + time)
+      this.renderTime(d)
+      window.requestAnimationFrame(step)
+    }
+    window.requestAnimationFrame(step)
+
+    return this.els.container
   }
 }
+
+const body = document.body
+const container = document.createDocumentFragment()
+const opts = new Options()
+const backgroundImage = new BackgroundImage(opts.backgroundImageUpdateFrequency, opts.backgroundImageURL)
+const time = new Time(opts.startDateTime)
+const clock = new Clock({
+  startDate: opts.startDateTime,
+  size: 33,
+  sizeUnits: 'vmin',
+  minuteColor: '#de54a5',
+  hourColor: '#bb54de'
+})
+
+container.appendChild(backgroundImage.render())
+container.appendChild(time.render())
+container.appendChild(clock.render())
+
+body.appendChild(container)

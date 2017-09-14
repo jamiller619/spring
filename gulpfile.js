@@ -1,4 +1,4 @@
-var gulp = require('gulp'),
+const gulp = require('gulp'),
   sass = require('gulp-sass'),
   browserSync = require('browser-sync'),
   useref = require('gulp-useref'),
@@ -12,13 +12,13 @@ var gulp = require('gulp'),
   inlinesource = require('gulp-inline-source'),
   imagemin = require('gulp-imagemin');
 
-var sassDirectory = 'dev/scss/**/*.scss';
+const sassDirectory = 'dev/scss/**/*.scss';
 
-gulp.task('clean', function() {
+gulp.task('clean', () => {
   return del.sync('dist');
 });
 
-gulp.task('browser-sync', function() {
+gulp.task('browser-sync', () => {
   browserSync.init({
     server: {
       baseDir: './dev'
@@ -27,7 +27,7 @@ gulp.task('browser-sync', function() {
   });
 });
 
-gulp.task('build-css', function () {
+gulp.task('build-css', () => {
   return gulp.src(sassDirectory)
     .pipe(sass().on('error', sass.logError))
     .pipe(cssnano({
@@ -37,24 +37,24 @@ gulp.task('build-css', function () {
     .pipe(browserSync.stream());
 });
 
-gulp.task('build-js', function() {
+gulp.task('build-js', () => {
   return gulp.src('dev/index.html')
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('bump-version', function() {
+gulp.task('bump-version', () => {
   gulp.src('manifest.json')
     .pipe(bump({ type: 'minor' }))
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('clean-build', function() {
+gulp.task('clean-build', () => {
   del(['dist/assets/**']);
 });
 
-gulp.task('build-html', function() {
+gulp.task('build-html', () => {
   return gulp.src('dist/index.html')
     .pipe(inlinesource({
       compress: false
@@ -66,13 +66,13 @@ gulp.task('build-html', function() {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build-images', function() {
+gulp.task('build-images', () => {
   return gulp.src('dev/images/*')
     .pipe(imagemin())
     .pipe(gulp.dest('dist/images'));
 });
 
-gulp.task('build', function(callback) {
+gulp.task('build', (callback) => {
   runSequence('clean', 'build-css', 'build-js', 'build-html', 
     ['build-images', 'bump-version'],
     'clean-build',
@@ -80,10 +80,10 @@ gulp.task('build', function(callback) {
   );
 });
 
-gulp.task('default', ['browser-sync', 'build-css'], function() {
+gulp.task('default', ['browser-sync', 'build-css'], () => {
   gulp.watch(sassDirectory, ['build-css']);
   gulp.watch('dev/*.html', browserSync.reload); 
-  gulp.watch('dev/images/*', function() {
+  gulp.watch('dev/images/*', () => {
     runSequence('build-images', browserSync.reload);
   });
   gulp.watch('dev/js/**/*.js', browserSync.reload); 
