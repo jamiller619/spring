@@ -52,7 +52,7 @@ class BackgroundImage {
 
 class Clock {
   constructor({ startDate, size, sizeUnits, minuteColor, hourColor }) {
-    this.container = document.createElement('div');
+    this.container = document.createElement('div')
     this.size = size
     this.sizeUnits = sizeUnits
     this.startDate = startDate
@@ -62,21 +62,21 @@ class Clock {
     }
   }
   getDegrees(date) {
-    var d = date || new Date();
-    var minutes = (d.getSeconds() / 60 + d.getMinutes()) / 60;
-    var hours = (d.getHours() + d.getMinutes() / 60) / 12;
+    var d = date || new Date()
+    var minutes = (d.getSeconds() / 60 + d.getMinutes()) / 60
+    var hours = (d.getHours() + d.getMinutes() / 60) / 12
     return {
       minute: (minutes * 360) % 360,
       hour: (hours * 360) % 360
-    };
+    }
   }
   createMarkers() {
     const markers = document.createDocumentFragment()
     const els = [...Array(12)].map((_, i) => {
-      let el = document.createElement('div');
-      el.className = 'marker';
+      let el = document.createElement('div')
+      el.className = 'marker'
       el.style.transform = `rotate(${i * 360 / 12}deg) translate(${(this.size / 2 * .75) + this.sizeUnits})`;
-      markers.appendChild(el);
+      markers.appendChild(el)
     })
     return markers
   }
@@ -178,15 +178,129 @@ class Time {
       window.requestAnimationFrame(step)
     }
     window.requestAnimationFrame(step)
-
     return this.els.container
+  }
+}
+
+let isBookmarkFolderOpen = false
+
+class Bookmarks {
+  async render() {
+    this.container = document.createElement('ul')
+    const entries = await this.getBookmarkEntries()
+    const bookmarks = this.renderEntries(entries)
+    
+    this.container.className = 'bookmarks'
+    this.container.appendChild(bookmarks)
+
+    return this.container
+  }
+  async getBookmarkEntries() {
+    let bookmarks = []
+    return new Promise((resolve, reject) => {
+      chrome.bookmarks.getTree(root => {
+        if (root.length && root[0] && root[0].children) {
+          root[0].children.forEach(bookmarkNode => {
+            if (bookmarkNode.title === 'Bookmarks Bar') {
+              bookmarks = bookmarkNode.children
+            }
+          })
+        }
+        resolve(bookmarks)
+      })
+    })
+  }
+  renderEntries(entries) {
+    const container = document.createDocumentFragment()
+    entries.forEach(entry => {
+      if (entry.children && entry.children.length > 0) {
+        container.appendChild(this.renderGroup(entry))
+      } else {
+        container.appendChild(this.renderItem(entry))
+      }
+    })
+    return container
+  }
+  renderGroup(groupNode) {
+    const container = document.createElement('li')
+    const list = document.createElement('ul')
+    const title = document.createElement('a')
+
+    title.className = 'title'
+    title.setAttribute('href', 'javascript:;')
+    title.textContent = groupNode.title
+
+    groupNode.children.forEach(item => {
+      const bookmark = this.renderItem(item)
+      list.appendChild(bookmark)
+    })
+
+    container.className = 'folder'
+    container.appendChild(title)
+    container.appendChild(list)
+
+    this.addRippleHover(title)
+    this.addEventListeners(container, list)
+
+    return container
+  }
+  renderItem(itemNode) {
+    const container = document.createElement('li')
+    const link = document.createElement('a')
+    const title = document.createTextNode(itemNode.title)
+    const favicon = document.createElement('img')
+    const url = new URL(itemNode.url)
+
+    link.setAttribute('href', itemNode.url)
+    link.setAttribute('title', itemNode.url)
+
+    if (url && url.host) {
+      const favicon = document.createElement('img')
+      favicon.setAttribute('src', `https://www.google.com/s2/favicons?domain=${ url.host }`)
+      link.appendChild(favicon)
+    }
+
+    link.appendChild(title)
+
+    this.addRippleHover(link)
+
+    container.appendChild(link)
+
+    return container
+  }
+  addEventListeners(container, list) {
+    container.addEventListener('click', () => {
+      list.classList.toggle('show')
+      isBookmarkFolderOpen = !isBookmarkFolderOpen
+    })
+
+    container.addEventListener('mouseover', () => {
+      if (isBookmarkFolderOpen) {
+        list.classList.add('show')
+      }
+    })
+
+    container.addEventListener('mouseout', () => {
+      if (isBookmarkFolderOpen) {
+        list.classList.remove('show')
+      }
+    })
+  }
+  addRippleHover(button) {
+    const ripple = document.createElement('span')
+    ripple.className = 'ripple'
+    button.appendChild(ripple)
+    button.addEventListener('mousemove', (event) => {
+      ripple.style.top = `${ event.offsetY }px`
+      ripple.style.left = `${ event.offsetX }px`
+    })
   }
 }
 
 const body = document.body
 const container = document.createDocumentFragment()
 const opts = new Options()
-const backgroundImage = new BackgroundImage(opts.backgroundImageUpdateFrequency, opts.backgroundImageURL)
+const backgroundImage = new BackgroundImage(opts.backgroundImageUpdateFrequency, opts.backgroundImageCustomURL)
 const time = new Time(opts.startDateTime)
 const clock = new Clock({
   startDate: opts.startDateTime,
@@ -201,3 +315,9 @@ container.appendChild(time.render())
 container.appendChild(clock.render())
 
 body.appendChild(container)
+
+const bookmarks = new Bookmarks()
+;(async() => {
+  const bookmarksRender = await bookmarks.render()
+  body.appendChild(bookmarksRender)
+})()

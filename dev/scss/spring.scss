@@ -61,7 +61,6 @@ body {
 }
 
 .analog {
-  z-index: 1;
   transform: scale(1);
   animation: scale .5s .1s backwards $ease-bounce;
 
@@ -164,4 +163,123 @@ body {
 
 .time {
   font-size: 1em;
+  text-align: right;
+}
+
+.bookmarks {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.02);
+  z-index: 1;
+  // max-width: calc(100vw - 24px);
+  background: hsla(0,0%,93%,.6);
+  padding: 0;
+  width: 100vw;
+
+  // &::after {
+  //   content: '';
+  //   background: url(images/icon-more-vert.svg) no-repeat right center;
+  //   position: absolute;
+  //   right: 0;
+  //   top: 0;
+  //   width: 24px;
+  //   height: 100%;
+  // }
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  a {
+    display: flex;
+    align-items: end;
+    position: relative;
+    text-decoration: none;
+    color: currentColor;
+  }
+
+  li {
+    background-color: rgba(237,237,237,.6);
+    transition-property: background-color;
+
+    &:hover {
+      background-color: rgba(240,240,240,.8);
+      .ripple {
+        display: block;
+      }
+    }
+  }
+
+  > li {
+    transition-duration: .5s;
+    > a {
+      max-width: 10vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: .5em;
+    }
+  }
+
+  .folder {
+
+    > a {
+      padding-left: 24px;
+      background-image: url(images/icon-folder.svg);
+      background-repeat: no-repeat;
+      background-position: 7% 44%;
+    }
+
+    ul {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      margin: 0;
+      padding: .33em 0;
+      background-color: rgba(242,242,242,.9);
+      box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+      border-radius: 2px;
+
+      &.show {
+        display: flex;
+      }
+
+      li {
+        padding: .25em 1.25em .25em .25em;
+        transition-duration: .1s;
+
+        &:hover {
+          background-color: rgba(190,190,190,.8);
+        }
+      }
+    }
+  }
+
+  img {
+    width: 16px;
+    height: 16px;
+    margin: 0 .2em;
+  }
+
+  .ripple {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: white;
+    width: 40px;
+    height: 40px;
+    margin-left: -20px;
+    margin-top: -20px;
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(18px);
+  }
 }
