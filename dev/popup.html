@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spring Options</title>
+  <style>
+    body {
+      padding: 10px;
+      width: 205px;
+      font-size: 14px;
+    }
+    h1 {
+      font-weight: 400;
+      font-size: 1.5em;
+      margin: 0 0 .5em 0;
+      padding: 0;
+    }
+    label {
+      display: block;
+      margin-bottom: .5em;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Spring Options</h1>
+  <label>
+    <input type="checkbox" id="bookmarksbar-enabled">
+    Show Bookmarks Bar
+  </label>
+  <label>
+    <input type="checkbox" id="search-enabled">
+    Show Bookmark Search
+  </label>
+  <label>
+    Color Scheme:
+    <select id="color-scheme">
+      <option value="default">Default</option>
+      <option value="classic">Classic</option>
+      <option value="aqua">Aqua</option>
+      <option value="rose-gold">Rose Gold</option>
+    </select>
+  </label>
+  <script src="js/popup.js"></script>
+</body>
+</html>

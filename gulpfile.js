@@ -38,7 +38,10 @@ gulp.task('build-css', () => {
 });
 
 gulp.task('build-js', () => {
-  return gulp.src('dev/index.html')
+  gulp.src('js/popup.js')
+    .pipe(gulp.dest('dist'));
+    
+  gulp.src('dev/index.html')
     .pipe(useref())
     .pipe(gulpIf('*.js', minify()))
     .pipe(gulp.dest('dist'));
