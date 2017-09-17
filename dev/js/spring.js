@@ -14,22 +14,22 @@ class Options {
           hour: '#bb54de'
         }
         switch(response.colorScheme) {
+          case 'pink':
+            colors = {
+              minute: '#ff687b',
+              hour: '#ffcff9'
+            }
+            break;
+          case 'hornets':
+            colors = {
+              minute: '#9068be',
+              hour: '#12f3c1'
+            }
+            break;
           case 'classic':
             colors = {
-              minute: 'hsla(210,67%,60%,1)',
-              hour: 'hsla(0,67%,60%,1)'
-            }
-            break;
-          case 'aqua':
-            colors = {
-              minute: 'hsla(140,67%,60%,1)',
-              hour: 'hsla(200,67%,60%,1)'
-            }
-            break;
-          case 'rose-gold':
-            colors = {
-              minute: 'hsla(0,67%,70%,1)',
-              hour: 'hsla(30,67%,60%,1)'
+              minute: '#fccdd3',
+              hour: '#62bcfa'
             }
             break;
         }
