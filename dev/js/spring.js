@@ -10,26 +10,42 @@ class Options {
     return new Promise((resolve, reject) => {
       chrome.storage.sync.get('colorScheme', response => {
         let colors = {
-          minute: '#de54a5',
-          hour: '#bb54de'
+          minute: '#f12176',
+          minuteHand: '#fff',
+          marker: '#fff',
+          hour: '#520ff9',
+          dial: '#520ff9',
+          dialBorder: '#fff'
         }
         switch(response.colorScheme) {
-          case 'pink':
-            colors = {
-              minute: '#ff687b',
-              hour: '#ffcff9'
-            }
-            break;
           case 'hornets':
             colors = {
-              minute: '#9068be',
-              hour: '#12f3c1'
+              minute: '#00c1d3',
+              minuteHand: '#fff',
+              marker: '#fff',
+              hour: '#ea2891',
+              dial: '#020168',
+              dialBorder: '#fff'
             }
             break;
-          case 'classic':
+          case 'midnight':
             colors = {
-              minute: '#fccdd3',
-              hour: '#62bcfa'
+              minute: '#2c2445',
+              minuteHand: '#fff',
+              marker: '#fff',
+              hour: '#25162e',
+              dial: '#2a3854',
+              dialBorder: '#fff'
+            }
+            break;
+          case 'spring':
+            colors = {
+              minute: '#f12176',
+              minuteHand: '#fff',
+              marker: '#fff',
+              hour: '#520ff9',
+              dial: '#520ff9',
+              dialBorder: '#fff'
             }
             break;
         }
@@ -94,15 +110,12 @@ class BackgroundImage {
 }
 
 class Clock {
-  constructor({ startDate, size, sizeUnits, minuteColor, hourColor }) {
+  constructor({ startDate, size, sizeUnits, colors }) {
     this.container = document.createElement('div')
     this.size = size
     this.sizeUnits = sizeUnits
     this.startDate = startDate
-    this.colors = {
-      minute: minuteColor,
-      hour: hourColor
-    }
+    this.colors = colors
   }
   getDegrees(date) {
     var d = date || new Date()
@@ -135,8 +148,8 @@ class Clock {
     this.minuteHand = document.createElement('div')
     this.hoursContainer = document.createElement('div')
     this.hours = document.createElement('div')
-    const dial = document.createElement('div')
-    const face = document.createElement('div')
+    this.dial = document.createElement('div')
+    this.face = document.createElement('div')
 
     this.container.className = 'analog'
     this.container.style.width = this.container.style.height = this.size + this.sizeUnits
@@ -147,21 +160,21 @@ class Clock {
     this.minutesContainer.className = 'minutes-container'
     this.hoursContainer.className = 'hours-container'
     this.minuteHandContainer.className = 'minute-hand-container'
-    dial.className = 'dial'
-    face.className = 'face'
+    this.dial.className = 'dial'
+    this.face.className = 'face'
 
     this.setColors(this.colors)
 
-    face.appendChild(this.createMarkers())
+    this.face.appendChild(this.createMarkers())
 
     this.minutesContainer.appendChild(this.minutes)
     this.minuteHandContainer.appendChild(this.minuteHand)
     this.hoursContainer.appendChild(this.hours)
 
-    this.container.appendChild(face)
-    this.container.appendChild(dial)
-    this.container.appendChild(this.hoursContainer)
+    this.container.appendChild(this.face)
+    this.container.appendChild(this.dial)
     this.container.appendChild(this.minutesContainer)
+    this.container.appendChild(this.hoursContainer)
     this.container.appendChild(this.minuteHandContainer)
 
     const step = () => {
@@ -174,8 +187,12 @@ class Clock {
     return this.container
   }
   setColors(colors) {
-    this.minutes.style.backgroundColor = this.minuteHand.style.backgroundColor = colors.minute
+    this.minutes.style.backgroundColor = colors.minute
+    this.minuteHand.style.backgroundColor = colors.minuteHand
     this.hours.style.backgroundColor = colors.hour
+    this.dial.style.backgroundColor = colors.dial
+    this.dial.style.borderColor = colors.dialBorder
+    this.face.style.color = colors.marker
   }
 }
 
@@ -508,8 +525,7 @@ opts.getColorScheme().then(colors => {
     startDate: opts.startDateTime,
     size: 31,
     sizeUnits: 'vmin',
-    minuteColor: colors.minute,
-    hourColor: colors.hour
+    colors: colors
   })
   document.body.appendChild(clock.render())
 })

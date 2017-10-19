@@ -91,7 +91,8 @@ body {
 
   .dial {
     border-radius: 50%;
-    background-color: $black;
+    border-width: 9px;
+    border-style: solid;
     animation: dial .5s .1s both $ease-bounce;
   }
 
@@ -104,11 +105,11 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 1.3%;
-    height: 1.3%;
+    width: 1.5%;
+    height: 1.5%;
     margin: -.65%;
     border-radius: 50%;
-    background-color: rgba($black, .9);
+    background-color: currentColor;
   }
 
   .minutes-container,
@@ -117,10 +118,6 @@ body {
     width: 100%;
     height: 100%;
     animation: rotate 1s $ease;
-  }
-
-  .minutes-container {
-    mix-blend-mode: multiply;
   }
 
   .hours,
@@ -134,13 +131,13 @@ body {
     overflow: hidden;
   }
 
-  .minutes-container,
+  .hours-container,
   .minute-hand-container {
     margin-top: -100%;
   }
 
   .minute-hand {
-    width: 4px;
+    width: 5px;
     height: 50%;
     margin-left: calc(50% - 2px);
     transform-origin: bottom;
@@ -150,13 +147,12 @@ body {
 
 .digital {
   font-family: -apple-system, system-ui;
-  font-weight: 200;
+  font-weight: 300;
   font-size: 8vmin;
   -webkit-font-smoothing: subpixel-antialiased;
   color: white;
   text-shadow: 1px 1px 2px $black;
   animation: appear .5s .6s backwards;
-  opacity: .8;
   z-index: 1;
 }
 
