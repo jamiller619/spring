@@ -1,10 +1,12 @@
 {
-  "name": "spring",
+  "name": "spring-app",
   "version": "1.0.0",
   "description": "A minimal new tab page for Google Chrome",
-  "main": "index.js",
+  "main": "spring.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "parcel src/spring.html -d dist",
+    "build": "parcel build src/spring.html -d dist",
+    "publish": ""
   },
   "repository": {
     "type": "git",
@@ -17,19 +19,9 @@
   },
   "homepage": "https://jamiller619.github.io/spring",
   "devDependencies": {
-    "browser-sync": "^2.17.3",
-    "del": "^2.2.2",
-    "gulp": "^3.9.1",
-    "gulp-babel-minify": "^0.2.0",
-    "gulp-bump": "^2.4.0",
-    "gulp-cssnano": "^2.1.2",
-    "gulp-htmlmin": "^3.0.0",
-    "gulp-if": "^2.0.1",
-    "gulp-imagemin": "^3.1.1",
-    "gulp-inline-source": "^3.0.0",
-    "gulp-sass": "^2.3.2",
-    "gulp-useref": "^3.1.2",
-    "node-sass": "^4.5.3",
-    "run-sequence": "^1.2.2"
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-minify": "^0.4.0",
+    "node-sass": "^4.8.3",
+    "parcel-bundler": "^1.7.0"
   }
 }
