@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "parcel src/spring.html -d dist/dev --no-source-maps",
     "imagemin": "imagemin src/images/* --out-dir=src/images",
-    "build": "npm run imagemin && parcel build src/spring.html -d dist/temp --no-source-maps --public-url ./ && npm run post-build",
+    "build": "npm run imagemin && parcel build src/spring.html -d dist/temp --no-source-maps && npm run post-build",
     "icon-copy": "cp src/images/icon128.png dist/prod",
     "post-build": "mkdir -p dist/prod && npm run icon-copy && cp src/manifest.json dist/prod && node ./scripts/build.js && rm -r ./dist/temp"
   },
