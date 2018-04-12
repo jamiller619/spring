@@ -1,101 +1,105 @@
-export default class Clock {
-  constructor({startDate, size, sizeUnits, colors}) {
-    this.container = this.createElement()
-    this.size = size
-    this.sizeUnits = sizeUnits
-    this.startDate = startDate
-    this.colors = colors
-  }
+import {h} from 'jsx-dom'
 
-  getDegrees(date) {
-    var d = date || new Date()
-    var minutes = (d.getSeconds() / 60 + d.getMinutes()) / 60
-    var hours = (d.getHours() + d.getMinutes() / 60) / 12
-    return {
-      minute: (minutes * 360) % 360,
-      hour: (hours * 360) % 360
-    }
-  }
-
-  createMarkers() {
-    const markers = document.createDocumentFragment()
-    const els = [...Array(12)].map((_, i) => {
-      let el = this.createElement()
-      el.className = 'marker'
-      el.style.transform = `rotate(${i * 360 / 12}deg) translate(${this.size /
-        2 *
-        0.75 +
-        this.sizeUnits})`
-      markers.appendChild(el)
-    })
-    return markers
-  }
-
-  renderTime(time) {
-    const degrees = this.getDegrees(time)
-    this.minutesContainer.style.transform = this.minuteHandContainer.style.transform = `rotate(${
-      degrees.minute
-    }deg)`
-    this.hoursContainer.style.transform = `rotate(${degrees.hour}deg)`
-  }
-
-  createElement(name = 'div') {
-    return document.createElement(name)
-  }
-
-  render() {
-    this.minutesContainer = this.createElement()
-    this.minutes = this.createElement()
-    this.minuteHandContainer = this.createElement()
-    this.minuteHand = this.createElement()
-    this.hoursContainer = this.createElement()
-    this.hours = this.createElement()
-    this.dial = this.createElement()
-    this.face = this.createElement()
-
-    this.container.className = 'analog'
-    this.container.style.width = this.container.style.height =
-      this.size + this.sizeUnits
-
-    this.minutes.className = 'minutes'
-    this.minuteHand.className = 'minute-hand'
-    this.hours.className = 'hours'
-    this.minutesContainer.className = 'minutes-container'
-    this.hoursContainer.className = 'hours-container'
-    this.minuteHandContainer.className = 'minute-hand-container'
-    this.dial.className = 'dial'
-    this.face.className = 'face'
-
-    this.setColors(this.colors)
-
-    this.face.appendChild(this.createMarkers())
-
-    this.minutesContainer.appendChild(this.minutes)
-    this.minuteHandContainer.appendChild(this.minuteHand)
-    this.hoursContainer.appendChild(this.hours)
-
-    this.container.appendChild(this.face)
-    this.container.appendChild(this.dial)
-    this.container.appendChild(this.minutesContainer)
-    this.container.appendChild(this.hoursContainer)
-    this.container.appendChild(this.minuteHandContainer)
-
-    const step = () => {
-      this.renderTime(new Date())
-      window.requestAnimationFrame(step)
-    }
-
-    window.requestAnimationFrame(step)
-
-    return this.container
-  }
-
-  setColors({minute, minuteHand, hour, dial, dialBorder, marker}) {
-    this.minutes.style.backgroundColor = minute
-    this.minuteHand.style.backgroundColor = minuteHand
-    this.hours.style.backgroundColor = hour
-    this.dial.style.backgroundColor = dial
-    this.dial.style.borderColor = dialBorder
-    this.face.style.color = marker
-  }
+const Container = ({name}) => {
+  return (
+    <div class={`${name}-container`}>
+      <div class={name} />
+    </div>
+  )
 }
+
+const Face = ({size}) => {
+  const markers = []
+  for (let i = 0; i < 12; i++) {
+    const distance = size / 2 * 0.75
+    const angle = i * 360 / 12
+    const markerStyle = {
+      transform: `rotate(${angle}deg) translate(${distance}px)`
+    }
+    markers.push(<div class="marker" style={markerStyle} />)
+  }
+
+  return <div class="face">{markers}</div>
+}
+
+const Dial = () => <div class="dial" />
+const MinutesContainer = () => <Container name="minutes" />
+const HoursContainer = () => <Container name="hours" />
+const MinuteHandContainer = () => <Container name="minute-hand" />
+
+window.customElements.define(
+  'ziiiro-clock',
+  class extends HTMLElement {
+    connectedCallback() {
+      this.renderContent()
+      window.requestAnimationFrame(this.render.bind(this))
+    }
+
+    render() {
+      this.renderTime(new Date())
+      window.requestAnimationFrame(this.render.bind(this))
+    }
+
+    renderContent() {
+      const container = document.createDocumentFragment()
+      const size = this.offsetWidth
+
+      this.$content = {
+        face: <Face size={size} />,
+        dial: <Dial />,
+        minutes: <MinutesContainer />,
+        hours: <HoursContainer />,
+        minuteHand: <MinuteHandContainer />
+      }
+
+      Object.values(this.$content).forEach(node => container.appendChild(node))
+
+      this.applyColors().appendChild(container)
+    }
+
+    applyColors() {
+      const {
+        minute,
+        minuteHand,
+        hour,
+        dial,
+        dialBorder,
+        marker
+      } = this.attributes
+      const content = this.$content
+      const applyToFirstChild = (element, key, value) => {
+        element.firstChild.style[key] = value
+      }
+
+      applyToFirstChild(content.minutes, 'backgroundColor', minute.value)
+      applyToFirstChild(content.minuteHand, 'backgroundColor', minuteHand.value)
+      applyToFirstChild(content.hours, 'backgroundColor', hour.value)
+
+      content.dial.style.backgroundColor = dial.value
+      content.dial.style.borderColor = dialBorder.value
+      content.face.style.color = marker.value
+
+      return this
+    }
+
+    renderTime(time) {
+      const {minutes, minuteHand, hours} = this.$content
+      const degrees = this.getClockAngles(time)
+
+      minutes.style.transform = minuteHand.style.transform = `rotate(${
+        degrees.minute
+      }deg)`
+      hours.style.transform = `rotate(${degrees.hour}deg)`
+    }
+
+    getClockAngles(date) {
+      const d = date || new Date()
+      const minutes = (d.getSeconds() / 60 + d.getMinutes()) / 60
+      const hours = (d.getHours() + d.getMinutes() / 60) / 12
+      return {
+        minute: (minutes * 360) % 360,
+        hour: (hours * 360) % 360
+      }
+    }
+  }
+)

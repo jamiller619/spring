@@ -19,9 +19,13 @@
   },
   "homepage": "https://jamiller619.github.io/spring",
   "devDependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-minify": "^0.4.0",
+    "jsx-dom": "^6.1.1",
     "node-sass": "^4.8.3",
     "parcel-bundler": "^1.7.0"
-  }
+  },
+  "dependencies": {}
 }

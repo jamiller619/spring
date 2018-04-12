@@ -1,23 +1,30 @@
-import Options from './js/options'
-import Unsplash from './js/unsplash'
-import Time from './js/time'
-import Clock from './js/clock'
+import {h} from 'jsx-dom'
 
+import './js/epic-unsplash'
+import './js/date-time'
+import './js/clock'
 import './spring.scss'
 
-const container = document.createDocumentFragment()
-const {bgUpdateFreq, bgCustomURL, startTime, colors} = new Options()
-const bg = new Unsplash(bgUpdateFreq, bgCustomURL)
-const time = new Time(startTime)
-const clock = new Clock({
-  startDate: startTime,
-  size: 31,
-  sizeUnits: 'vmin',
-  colors: colors
-})
+const colors = {
+  minute: '#f12176',
+  minuteHand: '#fff',
+  marker: '#fff',
+  hour: '#924aef',
+  dial: '#573c79',
+  dialBorder: '#fff'
+}
 
-container.appendChild(bg.render())
-container.appendChild(time.render())
-container.appendChild(clock.render())
+const App = () => {
+  return [
+    <epic-unsplash class="unsplash" update-frequency="daily" />,
+    <date-time class="digital" />,
+    <ziiiro-clock class="analog" {...colors} />
+  ]
+}
+
+const container = document.createDocumentFragment()
+const app = <App />
+
+app.forEach(node => container.appendChild(node))
 
 document.body.appendChild(container)
