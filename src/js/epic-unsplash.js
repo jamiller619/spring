@@ -46,13 +46,11 @@ window.customElements.define(
       const {width, height} = this.size
 
       img.onload = () => {
-        const imageStyles = {
+        Object.assign(this.image.style, {
           width,
           height,
           backgroundImage
-        }
-        
-        Object.assign(this.image.style, imageStyles)
+        })
       }
       img.src = url
     }
