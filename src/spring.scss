@@ -71,8 +71,8 @@ body {
 }
 
 .analog {
-  width: 31vmin;
-  height: 31vmin;
+  width: 32vmin;
+  height: 32vmin;
   transform: scale(1);
   animation: scale 0.5s 0.1s backwards var(--easeBounce);
 
@@ -94,7 +94,7 @@ body {
 
   .dial {
     border-radius: 50%;
-    border-width: 9px;
+    border-width: 8px;
     border-style: solid;
     animation: dial 0.5s 0.1s both var(--easeBounce);
   }
@@ -142,7 +142,7 @@ body {
   }
 
   .minute-hand {
-    width: 5px;
+    width: 4px;
     height: 50%;
     margin-left: calc(50% - 2px);
     transform-origin: bottom;

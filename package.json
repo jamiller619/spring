@@ -7,7 +7,8 @@
     "dev": "parcel src/spring.html -d dist/dev --no-source-maps",
     "imagemin": "imagemin src/images/* --out-dir=src/images",
     "build": "npm run imagemin && parcel build src/spring.html -d dist/temp --no-source-maps --public-url ./ && npm run post-build",
-    "post-build": "mkdir dist/prod && cp src/images/icon128.png dist/prod && cp src/manifest.json dist/prod && inliner -n ./dist/temp/spring.html > ./dist/prod/spring.html && rm -r ./dist/temp"
+    "icon-copy": "cp src/images/icon128.png dist/prod",
+    "post-build": "mkdir -p dist/prod && npm run icon-copy && cp src/manifest.json dist/prod && node ./scripts/build.js && rm -r ./dist/temp"
   },
   "repository": {
     "type": "git",
@@ -24,9 +25,11 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-minify": "^0.4.0",
+    "fs-extra": "^5.0.0",
     "jsx-dom": "^6.1.1",
     "node-sass": "^4.8.3",
-    "parcel-bundler": "^1.7.0"
+    "parcel-bundler": "^1.7.0",
+    "web-resource-inliner": "^4.2.1"
   },
   "dependencies": {}
 }

@@ -2,6 +2,7 @@
  * Creates a full-size background image from Unsplash
  */
 const style = document.createElement('style')
+
 style.textContent = `
 .image {
   display: block;
@@ -58,12 +59,9 @@ window.customElements.define(
 
     get url() {
       const {width, height} = this.size
-
-      if (this.hasAttribute('url')) {
-        return this.getAttribute('url')
-      }
-
-      return `https://source.unsplash.com/featured/${width}x${height}/${this.updateFrequency}`
+      const lookupId = (this.hasAttribute('photo-id') && this.getAttribute('photo-id')) || this.photoId || 'featured'
+      
+      return `https://source.unsplash.com/${lookupId}/${width}x${height}/${this.updateFrequency}`
     }
 
     get updateFrequency() {

@@ -6,12 +6,12 @@ import './js/clock'
 import './spring.scss'
 
 const colors = {
-  minute: '#f12176',
-  minuteHand: '#fff',
-  marker: '#fff',
-  hour: '#924aef',
-  dial: '#373c58',
-  dialBorder: '#fff'
+  minute: '#f53a88',
+  minuteHand: '#ffa0e1',
+  marker: '#f3a6a6',
+  hour: '#6813aa',
+  dial: '#201e21',
+  dialBorder: '#511c5f'
 }
 
 const App = () => {
