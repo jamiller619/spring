@@ -4,9 +4,10 @@
   "description": "A minimal new tab page for Google Chrome",
   "main": "spring.js",
   "scripts": {
-    "dev": "parcel src/spring.html -d dist",
-    "build": "parcel build src/spring.html -d dist",
-    "publish": ""
+    "dev": "parcel src/spring.html -d dist/dev --no-source-maps",
+    "imagemin": "imagemin src/images/* --out-dir=src/images",
+    "build": "npm run imagemin && parcel build src/spring.html -d dist/temp --no-source-maps --public-url ./ && npm run post-build",
+    "post-build": "mkdir dist/prod && cp src/images/icon128.png dist/prod && cp src/manifest.json dist/prod && inliner -n ./dist/temp/spring.html > ./dist/prod/spring.html && rm -r ./dist/temp"
   },
   "repository": {
     "type": "git",

@@ -10,7 +10,7 @@ const colors = {
   minuteHand: '#fff',
   marker: '#fff',
   hour: '#924aef',
-  dial: '#573c79',
+  dial: '#373c58',
   dialBorder: '#fff'
 }
 
@@ -22,9 +22,11 @@ const App = () => {
   ]
 }
 
-const container = document.createDocumentFragment()
-const app = <App />
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.createDocumentFragment()
+  const app = <App />
 
-app.forEach(node => container.appendChild(node))
+  app.forEach(node => container.appendChild(node))
 
-document.body.appendChild(container)
+  document.body.appendChild(container)
+})
