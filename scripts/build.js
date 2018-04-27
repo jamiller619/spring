@@ -1,5 +1,11 @@
 const path = require('path')
 const fs = require('fs-extra')
+/*
+ * The hoek@2.16.3 pkg is causing security errors on Github
+ * run `npm ls hoek` at the root to see dep graph.
+ * hoek needs to be updated, but because web-resource-inliner
+ * is a build tool, I'm making it `opt-in` as a peer dep
+ */
 const inline = require('web-resource-inliner')
 
 const ROOT = path.join(__dirname, '../')

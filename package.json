@@ -5,6 +5,7 @@
   "main": "spring.js",
   "scripts": {
     "dev": "parcel src/spring.html -d dist/dev --no-source-maps",
+    "postcss-watch": "postcss dist/dev/*.css --replace",
     "imagemin": "imagemin src/images/* --out-dir=src/images",
     "build": "npm run imagemin && parcel build src/spring.html -d dist/temp --no-source-maps && npm run post-build",
     "icon-copy": "cp src/images/icon128.png dist/prod",
@@ -27,9 +28,11 @@
     "babel-preset-minify": "^0.4.0",
     "fs-extra": "^5.0.0",
     "jsx-dom": "^6.1.1",
-    "node-sass": "^4.8.3",
-    "parcel-bundler": "^1.7.0",
-    "web-resource-inliner": "^4.2.1"
+    "parcel-bundler": "^1.7.1",
+    "postcss-modules": "^1.1.0",
+    "postcss-nested": "^3.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "web-resource-inliner": "^4.2.1"
+  }
 }

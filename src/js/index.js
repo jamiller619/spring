@@ -3,7 +3,7 @@ import {h} from 'jsx-dom'
 import './epic-unsplash'
 import './date-time'
 import './ziiiro-clock'
-import '../spring.scss'
+import '../spring.css'
 
 const colors = {
   minute: '#f53a88',
