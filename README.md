@@ -5,7 +5,6 @@
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/users/lcomlokgcbklomfecjjpjlncapnhepbl.svg)
 ![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/lcomlokgcbklomfecjjpjlncapnhepbl.svg)
 ![license](https://img.shields.io/github/license/jamiller619/spring.svg)
-[![BCH compliance](https://bettercodehub.com/edge/badge/jamiller619/spring?branch=master)](https://bettercodehub.com/)
 
 # 🤖 Built with Web Components
 - `<epic-unsplash />` Epic, full-page background photos from [Unsplash](http://www.unsplash.com).

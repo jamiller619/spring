@@ -1,0 +1,22 @@
+{
+  "name": "spring-2024",
+  "version": "2.0.0",
+  "description": "A minimal new tab page for Google Chrome.",
+  "main": "src/spring.js",
+  "author": "Jeff Miller",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamiller619/spring.git"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.9"
+  }
+}
