@@ -17,7 +17,7 @@
     "build": "yarn workspace @spring/extension build",
     "api:deploy": "deployctl deploy --env-file=.env",
     "release": "yarn extension:build && deno run -A scripts/release.ts",
-    "clean": "npx rimraf packages/*/node_modules yarn.lock node_modules"
+    "clean": "npx rimraf yarn.lock node_modules"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.6",
