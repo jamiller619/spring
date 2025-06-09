@@ -136,7 +136,7 @@ style.textContent = css`
 
   #outline {
     background: rgb(240 240 240 / 0.5);
-    outline: 8px solid #232323;
+    outline: 6px solid #1212128f;
     box-shadow: 0 0 25px 7px #00000054;
     animation: appear 400ms 300ms both var(--ease-out);
   }

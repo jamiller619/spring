@@ -33,6 +33,13 @@ style.textContent = css`
 
   button {
     all: unset;
+    background: #000000a3;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   svg {
