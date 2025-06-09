@@ -1,4 +1,5 @@
 import { Options, PhotosType } from '@types'
+import '@/components/favicon'
 import './style.css'
 
 const keys = {

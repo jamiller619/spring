@@ -16,7 +16,6 @@
     "extension:dx": "yarn workspace @spring/extension dx",
     "build": "yarn workspace @spring/extension build",
     "api:deploy": "deployctl deploy --env-file=.env",
-    "release": "yarn extension:build && deno run -A scripts/release.ts",
     "clean": "npx rimraf yarn.lock node_modules"
   },
   "devDependencies": {
