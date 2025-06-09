@@ -1014,7 +1014,7 @@
           ]
         }
       },
-      "packages/chrome": {
+      "packages/extension": {
         "packageJson": {
           "dependencies": [
             "npm:@types/chrome@^0.0.280",

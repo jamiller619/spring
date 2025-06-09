@@ -6,27 +6,36 @@
     <script type="module" src="./index.ts"></script>
     <style>
       body {
-        padding: 0;
-        margin: 0;
         height: 100vh;
         overflow: hidden;
+        font: unset;
         display: flex;
         align-items: end;
         justify-content: end;
-        font: unset;
+        gap: 1rem;
+        padding: 1rem;
+        margin: 0;
       }
 
-      time-clock,
-      ziiiro-clock {
-        margin: 1rem;
-      }
-
-      time-clock {
+      date-time {
         color: #fff;
-        text-align: right;
-        font-size: 8vmin;
         text-shadow: 1px 1px 2px #161515;
         animation: appear 500ms 1s both ease-out;
+        line-height: 1;
+      }
+
+      .datetime {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+      }
+
+      .time {
+        font-size: 8vmin;
+      }
+
+      .date {
+        font-size: 3vmin;
       }
 
       ziiiro-clock {
@@ -44,7 +53,14 @@
   </head>
   <body>
     <epic-unsplash key="collection" value="yvLAh9Xk5B4"></epic-unsplash>
-    <time-clock></time-clock>
+    <div class="datetime">
+      <date-time class="time" hour="numeric" minute="2-digit"></date-time>
+      <date-time
+        class="date"
+        weekday="long"
+        month="long"
+        day="numeric"></date-time>
+    </div>
     <ziiiro-clock hour="dodgerblue" minute="deeppink"></ziiiro-clock>
   </body>
 </html>

@@ -1,8 +1,8 @@
 {
-  "name": "@spring/chrome",
+  "name": "@spring/extension",
   "version": "2.0.0",
   "description": "A minimal new tab page for Google Chrome",
-  "repository": "https://github.com/jamiller619/spring/tree/main/packages/chrome",
+  "repository": "https://github.com/jamiller619/spring/tree/main/packages/extension",
   "author": "Jeff Miller",
   "license": "MIT",
   "type": "module",

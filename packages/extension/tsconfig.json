@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "lib": ["DOM.Iterable"],
     "paths": {
       "@/*": ["./*"],
       "@types": ["../@types"]

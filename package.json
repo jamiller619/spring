@@ -11,12 +11,12 @@
     "packages/*"
   ],
   "scripts": {
-    "dx": "yarn concurrently --n chrome,api \"yarn chrome:dx\" \"yarn api:dx\"",
+    "dx": "yarn concurrently --n extension,api \"yarn extension:dx\" \"yarn api:dx\"",
     "api:dx": "yarn workspace @spring/api dx",
-    "chrome:dx": "yarn workspace @spring/chrome dx",
-    "build": "yarn workspace @spring/chrome build",
+    "extension:dx": "yarn workspace @spring/extension dx",
+    "build": "yarn workspace @spring/extension build",
     "api:deploy": "deployctl deploy --env-file=.env",
-    "release": "yarn chrome:build && deno run -A scripts/release.ts"
+    "release": "yarn extension:build && deno run -A scripts/release.ts"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.6",

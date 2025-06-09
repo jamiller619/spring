@@ -1,5 +1,9 @@
 {
-  "include": ["packages/chrome/**/*.ts", "packages/api/**/*.ts", "**/*.d.ts"],
+  "include": [
+    "packages/extension/**/*.ts",
+    "packages/api/**/*.ts",
+    "**/*.d.ts"
+  ],
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",

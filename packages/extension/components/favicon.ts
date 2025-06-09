@@ -1,7 +1,5 @@
 import conic from '@/assets/conic'
-import { css, html } from '@/utils/cis'
-
-console.log(conic)
+import { html } from '@/utils/cis'
 
 const template = document.createElement('template')
 
@@ -14,19 +12,17 @@ template.innerHTML = html`
     xmlns="http://www.w3.org/2000/svg"
     style="position: relative">
     <foreignObject width="100" height="100">
-      <!-- Hour hand -->
-      <div
-        id="hour"
-        xmlns="http://www.w3.org/1999/xhtml"
-        style="background-color: red"></div>
-      <!-- Minute hand -->
       <div
         id="minute"
         xmlns="http://www.w3.org/1999/xhtml"
-        style="background-color: blue"></div>
+        style="background-color: dodgerblue"></div>
+      <div
+        id="hour"
+        xmlns="http://www.w3.org/1999/xhtml"
+        style="background-color: deeppink"></div>
     </foreignObject>
     <!-- Center point -->
-    <circle cx="50" cy="50" r="20" fill="black" />
+    <circle cx="50" cy="50" r="22" fill="black" />
     <style>
       #clock foreignObject div {
         position: absolute;

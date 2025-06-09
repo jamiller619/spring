@@ -1,11 +1,11 @@
 import AdmZip from 'adm-zip'
 import fs from 'node:fs/promises'
-import manifest from '../packages/chrome/package.json' with { type: 'json' }
+import manifest from '../packages/extension/package.json' with { type: 'json' }
 
 const zip = new AdmZip()
 
-for await (const file of await fs.readdir('./dist/chrome')) {
-  zip.addLocalFile(`./dist/chrome/${file}`)
+for await (const file of await fs.readdir('./dist/extension')) {
+  zip.addLocalFile(`./dist/extension/${file}`)
 }
 
 try {

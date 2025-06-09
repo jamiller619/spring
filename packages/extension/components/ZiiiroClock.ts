@@ -90,7 +90,7 @@ class ZiiiroClock extends HTMLElement {
   drawFace() {
     const markers: HTMLElement[] = []
     const size = this.clientHeight
-    const distance = size / 2.8
+    const distance = size / 2.75
 
     for (let i = 0; i < 12; i += 1) {
       const angle = (i * 360) / 12
@@ -136,7 +136,7 @@ style.textContent = css`
 
   #effects {
     background: rgb(240 240 240 / 0.5);
-    outline: 5px solid #232323d9;
+    outline: 8px solid #232323;
     box-shadow: 0 0 25px 7px #00000054;
     animation: appear 500ms 500ms both var(--ease-out);
   }
@@ -171,7 +171,8 @@ style.textContent = css`
   }
 
   #minute-marker {
-    width: 4px;
+    /* width: 4px; */
+    width: 3px;
     height: calc(50% + 2px);
     position: absolute;
     left: 50%;
@@ -193,12 +194,11 @@ style.textContent = css`
     #000000); */
     background: radial-gradient(
       circle at 10% 20%,
-      color-mix(in srgb, var(--color-center) 97%, white),
-      var(--color-center) 70%
+      color-mix(in srgb, var(--color-center) 91%, white),
+      var(--color-center) 61%
     );
-    inset: 29%;
-    /* border: 6px solid color-mix(in srgb, var(--color-center) 85%, black); */
-    box-shadow: 0px 5px 8px #00000080;
+    inset: 26%;
+    box-shadow: 0 0 8px 2px #00000080;
 
     /* &:before {
       content: '';

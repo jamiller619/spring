@@ -15,7 +15,7 @@ export default defineConfig({
       targets: [
         {
           src: './manifest.json',
-          dest: '../../dist/chrome',
+          dest: '../../dist/extension',
         },
       ],
     }),
@@ -28,7 +28,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    outDir: '../../dist/chrome',
+    outDir: '../../dist/extension',
     emptyOutDir: true,
     minify: false,
     rollupOptions: {
