@@ -20,16 +20,28 @@ template.innerHTML = html`
         id="minute"
         xmlns="http://www.w3.org/1999/xhtml"
         style="background-color: dodgerblue"></div>
+      <div
+        id="background"
+        xmlns="http://www.w3.org/1999/xhtml"
+        style="background-color: white"></div>
     </foreignObject>
     <!-- Center point -->
     <circle cx="50" cy="50" r="22" fill="black" />
     <style>
-      #clock foreignObject div {
+      #clock #hour,
+      #clock #minute {
         position: absolute;
         inset: 0;
         clip-path: circle();
         mix-blend-mode: multiply;
         background-image: url(${conic});
+      }
+
+      #clock #background {
+        position: absolute;
+        inset: 0;
+        clip-path: circle();
+        mix-blend-mode: soft-light;
       }
     </style>
   </svg>

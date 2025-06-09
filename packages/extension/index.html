@@ -5,16 +5,25 @@
     <title>New Tab</title>
     <script type="module" src="./index.ts"></script>
     <style>
+      html,
       body {
-        height: 100vh;
+        height: 100%;
+      }
+
+      body {
         overflow: hidden;
         font: unset;
+        padding: 0;
+        margin: 0;
+      }
+
+      main {
+        height: 100%;
         display: flex;
         align-items: end;
         justify-content: end;
         gap: 1rem;
         padding: 1rem;
-        margin: 0;
       }
 
       date-time {
@@ -44,6 +53,14 @@
         height: var(--clock-size);
       }
 
+      options-page {
+        position: fixed;
+        left: 0;
+        top: 0;
+        color: white;
+        padding: 0.5rem;
+      }
+
       @keyframes appear {
         from {
           opacity: 0;
@@ -53,14 +70,17 @@
   </head>
   <body>
     <epic-unsplash key="collection" value="yvLAh9Xk5B4"></epic-unsplash>
-    <div class="datetime">
-      <date-time class="time" hour="numeric" minute="2-digit"></date-time>
-      <date-time
-        class="date"
-        weekday="long"
-        month="long"
-        day="numeric"></date-time>
-    </div>
-    <ziiiro-clock hour="dodgerblue" minute="deeppink"></ziiiro-clock>
+    <options-page></options-page>
+    <main>
+      <div class="datetime">
+        <date-time class="time" hour="numeric" minute="2-digit"></date-time>
+        <date-time
+          class="date"
+          weekday="long"
+          month="long"
+          day="numeric"></date-time>
+      </div>
+      <ziiiro-clock hour="dodgerblue" minute="deeppink"></ziiiro-clock>
+    </main>
   </body>
 </html>

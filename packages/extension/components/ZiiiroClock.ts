@@ -4,7 +4,7 @@ import getClockAngles from '@/utils/getClockAngles'
 import debounce from 'debounce'
 
 const template = html`
-  <div id="effects"></div>
+  <div id="outline"></div>
   <div id="container">
     <div id="hour"></div>
     <div id="minute"></div>
@@ -125,7 +125,7 @@ style.textContent = css`
   }
 
   #container,
-  #effects,
+  #outline,
   #minute,
   #hour,
   #center {
@@ -134,15 +134,16 @@ style.textContent = css`
     border-radius: 50%;
   }
 
-  #effects {
+  #outline {
     background: rgb(240 240 240 / 0.5);
     outline: 8px solid #232323;
     box-shadow: 0 0 25px 7px #00000054;
-    animation: appear 500ms 500ms both var(--ease-out);
+    animation: appear 400ms 300ms both var(--ease-out);
   }
 
   #container {
     animation: bounce 300ms var(--ease-out);
+    overflow: hidden;
   }
 
   #hour,
@@ -159,8 +160,8 @@ style.textContent = css`
   }
 
   #minute-marker {
-    width: 3px;
-    height: 50%;
+    width: 4px;
+    height: 52%;
     position: absolute;
     left: 50%;
     bottom: 50%;

@@ -4,6 +4,7 @@ import bind from '@/options/bind'
 import '@/components/EpicUnsplash.ts'
 import '@/components/DateTime.js'
 import '@/components/ZiiiroClock.ts'
+import '@/components/Options.ts'
 import '@/components/favicon.ts'
 
 const ziiiroClock = document.querySelector('ziiiro-clock')
