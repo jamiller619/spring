@@ -1,8 +1,10 @@
-import { css } from '@/utils/cis'
+import { css, html } from '@/utils/cis'
 import { Options, PhotosType, UnsplashPhoto } from '@types'
 import debounce from 'debounce'
+import errorIcon from '@/assets/knocked-out_face_3d.png'
 
 const style = document.createElement('style')
+const errorStyles = document.createElement('style')
 
 type UnsplashOptions = Pick<
   Options,
@@ -13,6 +15,17 @@ class EpicUnsplash extends HTMLElement {
   img = document.createElement('img')
   attrib = document.createElement('span')
   data: UnsplashPhoto | null = null
+  error = html`
+    <div class="unsplash-error">
+      <img src="${errorIcon}" />
+      <h2>Oops! The image failed to load...</h2>
+      <p>You can try reloading the page in a moment.</p>
+      <p class="msg"></p>
+      <button onclick="javascript:window.location.reload(true)">
+        Reload page
+      </button>
+    </div>
+  `
 
   get options(): UnsplashOptions {
     return {
@@ -22,32 +35,44 @@ class EpicUnsplash extends HTMLElement {
   }
 
   async connectedCallback() {
-    this.attachShadow({ mode: 'open' })
-    this.shadowRoot?.append(style, this.img, this.attrib)
+    try {
+      this.data = (await fetchData(this.options)) ?? null
+      this.attachShadow({ mode: 'open' })
+      this.shadowRoot?.append(style, this.img, this.attrib)
 
-    this.data = (await fetchData(this.options)) ?? null
+      if (!this.data) {
+        console.error(`Failed to fetch data from the API!`)
 
-    if (!this.data) {
-      console.error(`Failed to fetch data from the API!`)
+        return
+      }
 
-      return
+      this.createAttrib()
+      this.sizeImage()
+
+      globalThis.addEventListener('resize', () => {
+        const backgroundColor = this.data?.color ?? 'white'
+
+        this.img.style.opacity = '0'
+
+        document.body.style.backgroundColor = backgroundColor
+      })
+
+      globalThis.addEventListener(
+        'resize',
+        debounce(this.sizeImage.bind(this), 200),
+      )
+    } catch (err) {
+      this.attachShadow({ mode: 'open' })
+
+      this.shadowRoot!.innerHTML = this.error
+
+      const el = this.shadowRoot?.querySelector('.msg')
+      const msg = document.createTextNode(err?.message)
+
+      el.append(msg)
+
+      this.shadowRoot?.append(style)
     }
-
-    this.createAttrib()
-    this.sizeImage()
-
-    globalThis.addEventListener('resize', () => {
-      const backgroundColor = this.data?.color ?? 'white'
-
-      this.img.style.opacity = '0'
-
-      document.body.style.backgroundColor = backgroundColor
-    })
-
-    globalThis.addEventListener(
-      'resize',
-      debounce(this.sizeImage.bind(this), 200),
-    )
   }
 
   sizeImage() {
@@ -55,6 +80,7 @@ class EpicUnsplash extends HTMLElement {
       const src = addResizeParams(this.data.url)
 
       this.img.src = ''
+      this.img.classList.add('bg')
       this.img.onload = () => {
         this.img.style.opacity = '1'
       }
@@ -87,12 +113,53 @@ class EpicUnsplash extends HTMLElement {
 
 style.textContent = css`
   :host {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
     position: fixed;
     inset: 0;
+    background: #222222;
   }
 
-  img {
+  .unsplash-error {
+    align-self: center;
+    margin: auto;
+    text-align: center;
+    color: #dbdbdb;
+
+    img {
+      opacity: 0.7;
+      width: 50%;
+    }
+
+    .msg {
+      color: #cd5c5c;
+      background: black;
+      padding: 1rem;
+      border-radius: 5px;
+
+      &::before {
+        content: '⚠️';
+        margin-inline-end: 3px;
+      }
+    }
+
+    button {
+      all: unset;
+      padding-block: 5px;
+      padding-inline: 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      background: #87878736;
+
+      &:hover {
+        background: rgb(200 200 200 / 0.2);
+      }
+    }
+  }
+
+  .bg {
     position: absolute;
     inset: 0;
 
@@ -123,6 +190,22 @@ style.textContent = css`
   @keyframes appear {
     from {
       opacity: 0;
+    }
+  }
+`
+
+errorStyles.textContent = css`
+  .error-container {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+
+    > * {
+      flex: 1;
+      width: 100%;
+      height: 100%;
     }
   }
 `
