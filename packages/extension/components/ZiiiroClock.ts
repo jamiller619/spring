@@ -143,18 +143,6 @@ style.textContent = css`
 
   #container {
     animation: bounce 300ms var(--ease-out);
-
-    &:after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      /* background: radial-gradient(
-        circle at 10% 20%,
-        color-mix(in srgb, var(--color-center) 97%, white),
-        var(--color-center) 70%
-      ); */
-    }
   }
 
   #hour,
@@ -171,12 +159,11 @@ style.textContent = css`
   }
 
   #minute-marker {
-    /* width: 4px; */
     width: 3px;
-    height: calc(50% + 2px);
+    height: 50%;
     position: absolute;
     left: 50%;
-    bottom: calc(50% - 2px);
+    bottom: 50%;
     transform-origin: bottom;
   }
 
@@ -190,8 +177,6 @@ style.textContent = css`
   }
 
   #center {
-    /* background: linear-gradient(125deg, #616161,
-    #000000); */
     background: radial-gradient(
       circle at 10% 20%,
       color-mix(in srgb, var(--color-center) 91%, white),
@@ -199,18 +184,6 @@ style.textContent = css`
     );
     inset: 26%;
     box-shadow: 0 0 8px 2px #00000080;
-
-    /* &:before {
-      content: '';
-      position: absolute;
-      inset: 3%;
-      border-radius: 50%;
-      background: radial-gradient(
-        circle at 10% 20%,
-        color-mix(in srgb, var(--color-center) 85%, white),
-        var(--color-center) 60%
-      );
-    } */
   }
 
   #face {

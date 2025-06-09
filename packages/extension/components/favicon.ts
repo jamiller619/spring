@@ -13,13 +13,13 @@ template.innerHTML = html`
     style="position: relative">
     <foreignObject width="100" height="100">
       <div
-        id="minute"
-        xmlns="http://www.w3.org/1999/xhtml"
-        style="background-color: dodgerblue"></div>
-      <div
         id="hour"
         xmlns="http://www.w3.org/1999/xhtml"
         style="background-color: deeppink"></div>
+      <div
+        id="minute"
+        xmlns="http://www.w3.org/1999/xhtml"
+        style="background-color: dodgerblue"></div>
     </foreignObject>
     <!-- Center point -->
     <circle cx="50" cy="50" r="22" fill="black" />
